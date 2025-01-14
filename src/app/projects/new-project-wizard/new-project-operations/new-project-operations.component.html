@@ -1,0 +1,65 @@
+<section>
+  <form [formGroup]="operationsForm">
+    <ul class="operations" formArrayName="operations">
+      <!-- ### Dla każdej operacji w procesie -->
+      @for (operationControl of operations.controls; let j = $index; track
+      operationControl.value.operationId) {
+      <li class="operation" [formGroupName]="j">
+        <div class="circle">{{ j + 1 }}</div>
+        <input
+          type="text"
+          id="operationName"
+          formControlName="operationName"
+          required
+          placeholder="Nazwa operacji"
+          (change)="updateProjectProcesses()"
+        />
+        <a type="button" class="remove-operation" (click)="removeOperation(j)">
+          ×
+        </a>
+      </li>
+      }
+      <li>
+        <button
+          type="button"
+          class="add-operation-btn"
+          (click)="addOperation()"
+        >
+          + Dodaj operację
+        </button>
+      </li>
+    </ul>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="developedBy">Opracował</label>
+        <input
+          type="text"
+          id="developedBy"
+          formControlName="developedBy"
+          (change)="updateProjectProcesses()"
+        />
+      </div>
+      <div class="form-group">
+        <label for="checkedBy">Sprawdził:</label>
+        <input
+          type="text"
+          id="checkedBy"
+          formControlName="checkedBy"
+          (change)="updateProjectProcesses()"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="approvedBy">Zatwierdził:</label>
+        <input
+          type="text"
+          id="approvedBy"
+          formControlName="approvedBy"
+          (change)="updateProjectProcesses()"
+          required
+        />
+      </div>
+    </div>
+  </form>
+</section>

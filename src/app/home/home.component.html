@@ -1,0 +1,57 @@
+<div class="content-header">
+  <div class="search-box">
+    <input type="text" placeholder="Szukaj projektów, zasobów..." />
+    <button><i class="fas fa-search"></i></button>
+  </div>
+  <div class="quick-actions">
+    <button [routerLink]="['/new-project']">
+      <i class="fas fa-plus"></i> Nowy Projekt
+    </button>
+    <button><i class="fas fa-file-alt"></i> Generuj Raport</button>
+  </div>
+</div>
+
+<section class="dashboard-stats">
+  <div class="stat-box">
+    <h3>Projekty</h3>
+    <p>Liczba: 15</p>
+  </div>
+  <div class="stat-box">
+    <h3>Zasoby</h3>
+    <p>Liczba: 45</p>
+  </div>
+  <div class="stat-box">
+    <h3>Ostatnia aktualizacja</h3>
+    <p>17.12.2024</p>
+  </div>
+</section>
+
+<section class="recent-projects">
+  <h2>Ostatnio modyfikowane projekty</h2>
+  @for(project of recentProjects; track project) {
+  <app-project-card
+    [routerLink]="['/projects', project.projectId]"
+    [project]="project"
+  ></app-project-card>
+  }
+</section>
+
+<!-- 
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">title</h2>
+    </div>
+    <div class="modal-body">
+      <p class="modal-text">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis illum
+        saepe pariatur doloremque assumenda a hic corporis odio unde rem
+        asperiores ipsum suscipit iste, voluptate facilis nobis deserunt facere
+        dolorem!
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-close">close</button>
+    </div>
+  </div>
+</div> -->

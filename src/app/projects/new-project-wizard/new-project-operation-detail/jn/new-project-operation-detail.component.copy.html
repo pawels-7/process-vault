@@ -1,0 +1,418 @@
+<form [formGroup]="operationForm" class="operation-form">
+  <div class="form-container">
+    <div class="left-panel">
+      <!-- Fixtures Section -->
+      <div formArrayName="fixtures" class="fixtures-section">
+        <div class="fixtures-navigation">
+          <button
+            type="button"
+            (click)="goToPreviousFixture()"
+            [disabled]="currentFixtureIndex === 0"
+          >
+            &LeftTriangle;
+          </button>
+          <span
+            >Zamocowanie {{ currentFixtureIndex + 1 }} /
+            {{ fixtures.length }}</span
+          >
+          <button type="button" (click)="addFixture()">Dodaj</button>
+
+          <button type="button" (click)="removeFixture(currentFixtureIndex)">
+            Usuń
+          </button>
+          <button
+            type="button"
+            (click)="goToNextFixture()"
+            [disabled]="currentFixtureIndex === fixtures.length - 1"
+          >
+            &RightTriangle;
+          </button>
+        </div>
+        <!-- }  -->
+        @if (currentFixture) {
+        <div [formGroupName]="currentFixtureIndex" class="fixture-card">
+          <h3>Zamocowanie {{ currentFixtureIndex + 1 }}</h3>
+          <div class="fixture-upload">
+            <label>
+              Rysunek zamocowania:
+              <input
+                type="file"
+                (change)="handleImageUpload($event, currentFixtureIndex)"
+              />
+            </label>
+            @if(currentFixture.get('imagePreview')?.value) {
+            <div class="image-preview">
+              <img
+                [src]="currentFixture.get('imagePreview')?.value"
+                alt="Fixture Image"
+              />
+            </div>
+            } @else {
+            <div class="image-placeholder">Nie wybrano rysunku</div>
+            }
+          </div>
+
+          <!-- Machining Operations -->
+          <div formArrayName="machiningOperations" class="machining-operations">
+            @for( operation of getMachiningOperations(currentFixture).controls;
+            track operation; let j = $index) {
+            <div [formGroupName]="j" class="operation-card">
+              <h4>
+                Zabieg {{ j + 1 }}:
+                <input formControlName="name" placeholder="Nazwa zabiegu" />
+              </h4>
+
+              <button
+                type="button"
+                (click)="openOperationModal(currentFixtureIndex, j)"
+              >
+                &#9998;
+              </button>
+
+              <button
+                type="button"
+                (click)="removeMachiningOperation(currentFixtureIndex, j)"
+              >
+                Usuń
+              </button>
+            </div>
+            }
+            <button
+              type="button"
+              (click)="addMachiningOperation(currentFixtureIndex)"
+            >
+              Dodaj zabieg
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <!-- Time Components Section -->
+      <div formArrayName="timeComponents" class="time-components-section">
+        <h2>Składniki czasu tp</h2>
+        <button type="button" (click)="addTimeComponent()">&plus;</button>
+        @for(timeComponent of timeComponents.controls; track timeComponent ; let
+        j = $index) {
+        <div [formGroupName]="j" class="time-component-card">
+          <label>
+            Opis:
+            <input formControlName="description" type="text" />
+          </label>
+          <button type="button" (click)="removeTimeComponent(j)">Usuń</button>
+        </div>
+        }
+      </div>
+
+      <!-- Normalization Activities Section -->
+      <div
+        formArrayName="normalizationActivities"
+        class="normalization-section"
+      >
+        <h2>Czynności do normowania czasu tpz</h2>
+        <button type="button" (click)="addNormalizationActivity()">
+          &plus;
+        </button>
+        @for(activity of normalizationActivities.controls; track activity ; let
+        j = $index) {
+        <div [formGroupName]="j" class="normalization-card">
+          <label>
+            Opis:
+            <input
+              formControlName="description"
+              type="text"
+              placeholder="Nazwa"
+            />
+          </label>
+          <label>
+            Czas (min):
+            <input formControlName="time" type="number" step="0.01" />
+          </label>
+          <button type="button" (click)="removeNormalizationActivity(j)">
+            &minus;
+          </button>
+        </div>
+        }
+      </div>
+
+      <div class="resources-section">
+        <!-- Przyrządy i uchwyty obróbkowe -->
+        <div class="processing-fixtures-section">
+          <h2>Przyrządy i uchwyty obróbkowe</h2>
+
+          <div formArrayName="processingFixtures">
+            <button type="button" (click)="openProcessingFixturesModal()">
+              &plus;
+            </button>
+            @for(fixture of processingFixturesControls; track fixture; let i =
+            $index) {
+            <div [formGroupName]="i" class="fixture-item">
+              <span>{{ getControlValue(fixture, "name") }}</span>
+              <button type="button" (click)="removeProcessingFixture(i)">
+                Usuń
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Narzędzia i uchwyty narzędziowe -->
+        <div class="tool-holders-section">
+          <h2>Narzędzia i uchwyty narzędziowe</h2>
+          <button type="button" (click)="openToolHoldersModal()">&plus;</button>
+
+          <div formArrayName="toolHolders">
+            @for(holder of toolHoldersControls; track holder; let i = $index) {
+            <div [formGroupName]="i" class="tool-holder-item">
+              <span>{{ getControlValue(holder, "name") }}</span>
+              <button type="button" (click)="removeToolHolder(i)">Usuń</button>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Narzędzia pomiarowe -->
+        <div class="measuring-tools-section">
+          <h2>Narzędzia pomiarowe</h2>
+
+          <div formArrayName="measuringTools">
+            @for(tool of measuringToolsControls; track tool; let i = $index) {
+            <div [formGroupName]="i" class="measuring-tool-item">
+              <span>{{ getControlValue(tool, "name") }}</span>
+              <button type="button" (click)="removeMeasuringTool(i)">
+                Usuń
+              </button>
+            </div>
+            }
+          </div>
+
+          <button type="button" (click)="openMeasuringToolsModal()">
+            &plus;
+          </button>
+        </div>
+
+        <!-- Stanowisko robocze -->
+        <div class="work-station-section">
+          <h2>Stanowisko robocze</h2>
+          @if (workStation) {
+          <div class="work-station-item">
+            <span>{{ workStation.machineType }}</span>
+            <button type="button" (click)="selectWorkStation(null)">
+              Usuń
+            </button>
+          </div>
+          } @else {
+          <p>Nie wybrano stanowiska</p>
+          }
+
+          <button type="button" (click)="openWorkStationModal()">
+            Wybierz stanowisko
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  @if (isModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Szczegóły zabiegu</h2>
+
+      <!-- Warunki skrawania -->
+      <div class="modal-section">
+        <h3>Warunki skrawania</h3>
+        @if (getSelectedOperationDetails(); as details) {
+
+        <div class="conditions" [formGroup]="details.conditions">
+          <div class="condition-row">
+            <label>Dp: <input formControlName="Dp" type="number" /></label>
+            <label>Dk: <input formControlName="Dk" type="number" /></label>
+            <label>L: <input formControlName="L" type="number" /></label>
+            <label>tg: <input formControlName="tg" type="number" /></label>
+          </div>
+          <div class="condition-row">
+            <label>Ap: <input formControlName="Ap" type="number" /></label>
+            <label>f: <input formControlName="f" type="number" /></label>
+            <label>Vc: <input formControlName="Vc" type="number" /></label>
+            <label>n: <input formControlName="n" type="number" /></label>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Składniki czasu -->
+      <div class="modal-section">
+        <h3>Składniki czasu tp</h3>
+        @if (getSelectedOperationDetails(); as details) {
+        <div
+          formArrayName="timeComponents"
+          [formGroup]="details.selectedOperation"
+        >
+          @for(timeComponent of timeComponents.controls; track timeComponent
+          ;let k = $index) {
+          <div class="time-component-item">
+            <label>
+              {{ timeComponent.get("description")?.value }}:
+              <input type="number" [formControl]="getTimeComponentControl(k)" />
+            </label>
+          </div>
+
+          }
+        </div>
+        }
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" (click)="closeOperationModal()">
+          Zamknij
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Modale -->
+  @if (isProcessingFixturesModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Wybór przyrządu/uchwytu obróbkowego</h2>
+
+      <!-- Wyszukiwanie -->
+      <div class="search-container">
+        <input
+          type="text"
+          [formControl]="searchProcessingFixturesControl"
+          placeholder="Szukaj..."
+        />
+      </div>
+
+      <div class="resource-list">
+        @for(fixture of getFilteredProcessingFixtures(); track fixture) {
+        <div class="resource-item" (click)="selectProcessingFixture(fixture)">
+          <span>{{ fixture.name }}</span>
+        </div>
+        }
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn"
+          (click)="closeProcessingFixturesModal()"
+        >
+          Zamknij
+        </button>
+        <button
+          type="button"
+          class="btn"
+          (click)="openNewResourceModal('processingFixture')"
+        >
+          &plus;
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Modal dodawania nowego przyrządu -->
+  @if (isNewProcessingFixtureModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Dodaj nowy przyrząd</h2>
+      <form [formGroup]="newProcessingFixtureForm">
+        <div>
+          <label>Nazwa:</label>
+          <input type="text" formControlName="name" />
+        </div>
+        <div>
+          <label>Typ</label>
+          <input formControlName="type" />
+        </div>
+        <div class="modal-actions">
+          <button
+            type="button"
+            (click)="isNewProcessingFixtureModalOpen = false"
+          >
+            Anuluj
+          </button>
+          <button type="button" [disabled]="newProcessingFixtureForm.invalid">
+            Zapisz
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  }
+
+  <!-- Analogiczne modale dla pozostałych zasobów -->
+  @if (isToolHoldersModalOpen) {
+  <!-- Modal dla uchwytów narzędziowych -->
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Wybór narzędzia/uchwytu narzędziowego</h2>
+
+      <!-- Wyszukiwanie -->
+      <div class="search-container">
+        <input
+          type="text"
+          [formControl]="searchToolHoldersControl"
+          placeholder="Szukaj..."
+        />
+      </div>
+
+      <div class="resource-list">
+        @for(fixture of getFilteredToolHolders(); track fixture) {
+        <div class="resource-item" (click)="selectToolHolder(fixture)">
+          <span>{{ fixture.name }}</span>
+          <span>{{ fixture.type === "holder" ? "oprawka" : "płytka" }}</span>
+        </div>
+        }
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" (click)="closeToolHoldersModal()">
+          Zamknij
+        </button>
+        <button
+          type="button"
+          class="btn"
+          (click)="openNewResourceModal('toolHolder')"
+        >
+          &plus;
+        </button>
+      </div>
+    </div>
+  </div>
+  } @if (isNewToolHolderModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h2>Dodaj nowe narzędzie</h2>
+      <form [formGroup]="newToolHolderForm">
+        <div>
+          <label>Nazwa:</label>
+          <input type="text" formControlName="name" />
+        </div>
+        <div>
+          <label>Typ</label>
+          <input formControlName="type" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" (click)="isNewToolHolderModalOpen = false">
+            Anuluj
+          </button>
+          <button type="button" [disabled]="newToolHolderForm.invalid">
+            Zapisz
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  } @if (isMeasuringToolsModalOpen) {
+  <!-- Modal dla narzędzi pomiarowych -->
+  } @if (isWorkStationModalOpen) {
+  <!-- Modal dla stanowisk roboczych -->
+  }
+</form>

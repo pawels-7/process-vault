@@ -1,0 +1,238 @@
+// :host {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-evenly;
+//   align-items: center;
+//   background-color: var(--background-card);
+//   height: 100vh;
+// }
+
+// .logo {
+//   text-align: center;
+//   margin-top: 50px;
+
+//   img {
+//     height: 200px;
+//     width: 200px;
+
+//     @media (max-width: 700px) {
+//       height: 50px;
+//       width: 50px;
+//     }
+//   }
+// }
+
+// form {
+//   text-align: center;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-evenly;
+//   align-items: center;
+// }
+
+// .form-group {
+//   display: flex;
+//   flex-direction: column-reverse;
+// }
+
+// label {
+//   color: var(--color-text);
+//   font-size: 18px;
+//   margin-bottom: 5px;
+//   transition: all 0.4s ease;
+// }
+
+// input:placeholder-shown + label {
+//   opacity: 0;
+// }
+
+// input:focus + label {
+//   color: var(--color-primary);
+//   transform: translateY(-2px);
+// }
+
+// input {
+//   display: block;
+//   margin-bottom: 20px;
+//   border: 1.2px solid rgba(15, 15, 15, 0.2);
+//   color: var(--color-primary);
+//   border-radius: 8px;
+//   padding: 7px 20px;
+//   font-size: 14px;
+//   transition: all 0.4s ease;
+//   background-color: var(--background-tertiary);
+// }
+
+// input:-webkit-autofill,
+// input:-webkit-autofill:hover,
+// input:-webkit-autofill:focus,
+// textarea:-webkit-autofill,
+// textarea:-webkit-autofill:hover,
+// textarea:-webkit-autofill:focus,
+// select:-webkit-autofill,
+// select:-webkit-autofill:hover,
+// select:-webkit-autofill:focus {
+//   -webkit-background-clip: text;
+//   -webkit-text-fill-color: var(--color-primary);
+// }
+
+// input:focus {
+//   outline: 1.2px solid var(--color-primary);
+//   box-shadow: 1px 1px 25px rgba(0, 75, 255, 0.1);
+// }
+
+// button {
+//   border: none;
+//   background-color: var(--color-primary);
+//   color: #fff;
+//   padding: 10px 20px;
+//   cursor: pointer;
+//   border-radius: 8px;
+//   font-size: 18px;
+// }
+
+// button:disabled {
+//   background-color: var(--color-primary-light);
+//   cursor: not-allowed;
+// }
+
+// .switch {
+//   margin-top: 10px;
+//   color: var(--color-text);
+//   cursor: pointer;
+//   font-size: 14px;
+
+//   &:hover {
+//     color: var(--color-primary);
+//   }
+// }
+
+// .error {
+//   color: var(--color-error);
+//   font-size: 14px;
+// }
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: var(--background-card);
+  height: 100vh;
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: var(--background-panel);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  max-width: 150px;
+  margin-bottom: 1rem;
+}
+
+.demo-credentials {
+  background-color: var(--background-section);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+fieldset {
+  border: none;
+}
+
+.demo-credentials dl {
+  // display: flex;
+  // flex-wrap: wrap;
+  // gap: 0.5rem;
+  // justify-content: center;
+}
+
+.demo-credentials dt {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text-dark);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--input-active);
+  box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
+}
+
+.submit-btn {
+  display: block;
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto;
+}
+
+.submit-btn:hover {
+  background-color: var(--button-hover);
+}
+
+.submit-btn:disabled {
+  background-color: var(--button-secondary);
+  cursor: not-allowed;
+}
+
+.switch {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--text-link);
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.switch:hover {
+  text-decoration: underline;
+}
+
+.error-container {
+  background-color: #ffdddd;
+  color: #ff0000;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

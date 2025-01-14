@@ -1,0 +1,66 @@
+<!-- <div class="logo">
+  <img src="img/logo.png" alt="A logo" />
+</div> -->
+
+<div class="container">
+  <div class="side">
+    <div class="logo">
+      <img src="img/logo.png" alt="A logo" />
+    </div>
+
+    <!-- Content for login -->
+    <div class="content">
+      <div class="welcome">
+        <h1>Witaj w systemie do zarządzania projektami</h1>
+      </div>
+
+      <div class="description">
+        <div>
+          Aplikacja do zarządzania projektami używana jest do zarządzania
+          projektami, w tym do zarządzania projektami, w tym do zarządzania
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if(!isLoading()) {
+
+  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+    @if(error()) {
+    <span class="error">{{ error() }}</span>
+    }
+    <p class="form-group">
+      <input
+        placeholder="E-mail"
+        type="email"
+        id="email"
+        ngModel
+        name="email"
+        required
+        email
+      />
+      <label for="email">E-mail</label>
+    </p>
+    <p class="form-group">
+      <input
+        type="password"
+        placeholder="Hasło"
+        ngModel
+        name="password"
+        id="password"
+        required
+        minlength="6"
+      />
+      <label for="password">Hasło</label>
+    </p>
+    <button type="submit" [disabled]="!authForm.valid">
+      {{ isLoginMode() ? "Zaloguj" : "Zarejestruj" }}
+    </button>
+    <a class="switch" (click)="onSwitchMode()">
+      Zmień na {{ isLoginMode() ? "rejestrację" : "logowanie" }}
+    </a>
+  </form>
+  } @else {
+  <app-loading-spinner></app-loading-spinner>
+  }
+</div>

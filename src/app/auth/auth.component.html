@@ -1,0 +1,176 @@
+<!-- <div class="logo">
+  <img src="img/logo.png" alt="A logo" />
+</div> -->
+
+<!-- @if(!isLoading()) {
+
+<form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+  @if(error()) {
+  <span class="error">{{ error() }}</span>
+  }
+  <p class="form-group">
+    <input
+      placeholder="E-mail"
+      type="email"
+      id="email"
+      ngModel
+      name="email"
+      required
+      email
+    />
+    <label for="email">E-mail</label>
+  </p>
+  <p class="form-group">
+    <input
+      type="password"
+      placeholder="Hasło"
+      ngModel
+      name="password"
+      id="password"
+      required
+      minlength="6"
+    />
+    <label for="password">Hasło</label>
+  </p>
+  <button type="submit" [disabled]="!authForm.valid">
+    {{ isLoginMode() ? "Zaloguj" : "Zarejestruj" }}
+  </button>
+  <a class="switch" (click)="onSwitchMode()">
+    Zmień na {{ isLoginMode() ? "rejestrację" : "logowanie" }}
+  </a>
+</form>
+} @else {
+<app-loading-spinner></app-loading-spinner>
+} -->
+
+<!-- 
+<div class="auth-container">
+  <header class="auth-header">
+    <img src="img/logo.png" alt="Logo" class="logo" />
+    <h1>Archiwizator Procesów Technologicznych Obróbki</h1>
+    <p>Możesz zalogować się na konto demonstracyjne:</p>
+    <p><strong>Email:</strong> demo&#64;demo.com</p>
+    <p><strong>Hasło:</strong> password</p>
+  </header>
+
+  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" class="auth-form">
+    @if(error()) {
+    <div>
+      <span class="error">{{ error() }}</span>
+    </div>
+    }
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input
+        placeholder="E-mail"
+        type="email"
+        id="email"
+        ngModel
+        name="email"
+        required
+        email
+        class="form-input"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Hasło</label>
+      <input
+        type="password"
+        placeholder="Hasło"
+        ngModel
+        name="password"
+        id="password"
+        required
+        minlength="6"
+        class="form-input"
+      />
+    </div>
+
+    <button type="submit" [disabled]="!authForm.valid" class="submit-btn">
+      {{ isLoginMode() ? "Zaloguj" : "Zarejestruj" }}
+    </button>
+
+    <a class="switch" (click)="onSwitchMode()">
+      Zmień na {{ isLoginMode() ? "rejestrację" : "logowanie" }}
+    </a>
+  </form>
+</div> -->
+
+@if(!isLoading()) {
+<section class="auth-container" aria-labelledby="page-title">
+  <header class="auth-header">
+    <img
+      src="img/logo.png"
+      alt="Logo Archiwizatora Procesów Technologicznych Obróbki"
+      class="logo"
+    />
+    <h1 id="page-title">Archiwizator Procesów Technologicznych Obróbki</h1>
+    <div class="demo-credentials">
+      <p>Możesz zalogować się na konto demonstracyjne:</p>
+      <dl>
+        <dt>Email:</dt>
+        <dd>demo&#64;demo.com</dd>
+        <dt>Hasło:</dt>
+        <dd>password</dd>
+      </dl>
+    </div>
+  </header>
+
+  <form
+    #authForm="ngForm"
+    (ngSubmit)="onSubmit(authForm)"
+    class="auth-form"
+    role="form"
+  >
+    @if(error()) {
+    <div class="error-container" role="alert">
+      <span class="error">{{ error() }}</span>
+    </div>
+    }
+
+    <fieldset>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input
+          placeholder="E-mail"
+          type="email"
+          id="email"
+          ngModel
+          name="email"
+          required
+          email
+          class="form-input"
+          aria-required="true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input
+          type="password"
+          placeholder="Hasło"
+          ngModel
+          name="password"
+          id="password"
+          required
+          minlength="6"
+          class="form-input"
+          aria-required="true"
+        />
+      </div>
+
+      <button type="submit" [disabled]="!authForm.valid" class="submit-btn">
+        {{ isLoginMode() ? "Zaloguj" : "Zarejestruj" }}
+      </button>
+
+      <a href="#" class="switch" (click)="onSwitchMode($event)" role="button">
+        Zmień na {{ isLoginMode() ? "rejestrację" : "logowanie" }}
+      </a>
+    </fieldset>
+  </form>
+</section>
+} @else {
+<app-loading-spinner />
+}

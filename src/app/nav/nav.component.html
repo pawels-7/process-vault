@@ -1,0 +1,28 @@
+<aside>
+  <div class="logo">
+    <img src="img/logo.png" alt="" />
+  </div>
+  <ul>
+    <!-- <li
+      routerLink="/"
+      routerLinkActive="selected"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a>panel główny</a>
+    </li> -->
+    <li routerLink="/projects" routerLinkActive="selected">
+      <a>projekty</a>
+    </li>
+    <li routerLink="/resources" routerLinkActive="selected">
+      <a>zasoby</a>
+    </li>
+  </ul>
+
+  <button class="theme" (click)="toggleTheme()">
+    {{ isLightTheme ? "☼" : "☽" }}
+  </button>
+
+  <a class="logout" (click)="onLogout()">Wyloguj</a>
+
+  <footer>&copy;2024</footer>
+</aside>

@@ -1,0 +1,126 @@
+<div id="svg-container">
+  <table id="processTable">
+    <thead>
+      <tr>
+        <th rowspan="2">Półfabrykat</th>
+        <th>Faza 0</th>
+        <th>Faza I</th>
+        <th>Faza II</th>
+        <th>Faza III</th>
+        <th>Faza IV</th>
+        <th>Faza V</th>
+        <th>Faza VI</th>
+        <th>Faza VII</th>
+        <th>Faza VIII</th>
+        <th>Faza IX</th>
+      </tr>
+      <tr>
+        <th>Obróbka cieplna własnościowa przedmiotu</th>
+        <th>Przygotowanie kszałtu wyjściowego przedmiotu</th>
+        <th>Przygotowanie baz głównych i pomocniczych</th>
+        <th>Obróbka kształtu podstawowego</th>
+        <th>Obróbka na gotowo powierzchni uzupełniających 1-go rzędu</th>
+        <th>Obróbka na gotowo powierzchni uzupełniających 2-go rzędu</th>
+        <th>Obróbka cieplna lub chemiczno-cieplna powierzchniowa</th>
+        <th>Obróbka wymiarowo-kształtowa ostateczna powierzchni</th>
+        <th>Obróbka powierzchniowa przedmiotu</th>
+        <th>Operacje uzupełniające</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-phase="blanks">
+          @for(blank of this.blanks; track blank.id) {
+          <div
+            class="circle"
+            #element
+            (click)="onCircleClick(element)"
+            [id]="'circle' + blank.id"
+            cdkDrag
+          >
+            {{ blank.name }}
+          </div>
+          }
+        </td>
+        @for(phase of this.phases; track $index) {
+        <td
+          [attr.data-phase]="'phase0'"
+          cdkDropList
+          [id]="'phase' + $index"
+          [cdkDropListConnectedTo]="[
+            'operations',
+            'phase0',
+            'phase1',
+            'phase2',
+            'phase3',
+            'phase4',
+            'phase5',
+            'phase6',
+            'phase7',
+            'phase8',
+            'phase9'
+          ]"
+          [cdkDropListData]="phase"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (operation of phase; track operation.id) {
+          <div
+            class="circle"
+            #element
+            (click)="onCircleClick(element)"
+            [id]="'circle' + operation.id"
+            cdkDrag
+          >
+            {{ operation.id }}
+          </div>
+          }
+        </td>
+        }
+      </tr>
+    </tbody>
+  </table>
+
+  <svg id="svg" width="100%" height="100%">
+    <defs>
+      <marker
+        id="arrowhead"
+        markerWidth="10"
+        markerHeight="7"
+        refX="10"
+        refY="3.5"
+        orient="auto"
+      >
+        <polygon points="0 0, 10 3.5, 0 7" />
+      </marker>
+    </defs>
+  </svg>
+</div>
+
+<div
+  class="operations"
+  cdkDropList
+  id="operations"
+  [cdkDropListConnectedTo]="[
+    'phase0',
+    'phase1',
+    'phase2',
+    'phase3',
+    'phase4',
+    'phase5',
+    'phase6',
+    'phase7',
+    'phase8',
+    'phase9'
+  ]"
+  [cdkDropListData]="zabiegi_obrobkowe"
+  (cdkDropListDropped)="drop($event)"
+>
+  @for(operation of this.zabiegi_obrobkowe; track operation.id) {
+  <div class="zabieg" cdkDrag>
+    <div class="circle-zabieg" [id]="operation.id">
+      {{ operation.id }}
+    </div>
+    {{ operation.name }}
+  </div>
+  }
+</div>

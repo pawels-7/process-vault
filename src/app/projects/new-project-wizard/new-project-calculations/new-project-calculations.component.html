@@ -1,0 +1,212 @@
+<section>
+  <form [formGroup]="form" (input)="calculateResults()">
+    <div class="inputs">
+      <div class="row">
+        <div class="control">
+          <div class="row">
+            <label for="levels_number">Ilość stopni wału</label>
+            <input
+              id="levels_number"
+              type="number"
+              formControlName="levels_number"
+              (input)="onLevelsChange()"
+            />
+          </div>
+        </div>
+
+        <div class="control">
+          <div class="row">
+            <label for="precision">Dokładność</label>
+            <input id="precision" type="number" formControlName="precision" />
+          </div>
+        </div>
+      </div>
+
+      <div class="levels" formArrayName="levels">
+        @for(level of levels.controls; track $index; let i = $index) {
+        <div class="level" [formGroupName]="i">
+          <div class="row">
+            <div class="control">
+              <div class="row">
+                <label for="level-diameter">
+                  d<sub>{{ i + 1 }}</sub
+                  >=
+                </label>
+                <input id="level-diameter" type="number" formControlName="d" />
+              </div>
+            </div>
+
+            <div class="control">
+              <div class="row">
+                <label for="level-length">
+                  l<sub>{{ i + 1 }}</sub
+                  >=
+                </label>
+                <input id="level-length" type="number" formControlName="l" />
+              </div>
+            </div>
+
+            <div class="control">
+              <div class="row">
+                <label for="level-it"> T= </label>
+                <input id="level-it" formControlName="t" />
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="results">
+      <p>
+        Długość całkowita przedmiotu obrabianego (L):
+        <span class="value"> {{ l_sum | number : "1.2-2" }} [mm] </span>
+      </p>
+      <p>
+        Największa średnica wału (D):
+        <span class="value"> {{ d_max | number : "1.2-2" }} [mm] </span>
+      </p>
+      <p>
+        Smukłość (L/Dmax):
+        <span class="value">
+          {{ smuklosc | number : "1.2-2" }}
+        </span>
+      </p>
+      <p>
+        <span> Objętość wałka (V<sub>PO</sub>): </span>
+        <span class="value"> {{ v_po | number : "1.2-2" }} [dm³] </span>
+      </p>
+      <p>
+        <span> Objętość półfabrykatu (V<sub>PF</sub>): </span>
+        <span class="value"> {{ v_pf | number : "1.2-2" }} [dm³] </span>
+      </p>
+      <p>
+        Współczynnik zmiany objętości (O):
+        <span class="value"> {{ o | number : "1.2-2" }} [%] </span>
+      </p>
+      <p>
+        <span> Masa wałka (m<sub>PO</sub>): </span>
+        <span class="value"> {{ m_po | number : "1.2-2" }} [kg] </span>
+      </p>
+      <p>
+        <span> Masa półfabrykatu (m<sub>PF</sub>): </span>
+        <span class="value"> {{ m_pf | number : "1.2-2" }} [kg] </span>
+      </p>
+      <p>
+        <span> Masa wiórów (m<sub>W</sub>): </span>
+        <span class="value"> {{ m_w | number : "1.2-2" }} [kg] </span>
+      </p>
+      <p>
+        <span> Średnia średnica PO (d<sub>śr</sub>): </span>
+        <span class="value"> {{ d_avg | number : "1.2-2" }} [mm] </span>
+      </p>
+      <p>
+        <span>Q<sub>zgr</sub>: </span>
+        <span class="value"> {{ q_zgr }} </span>
+      </p>
+      <p>
+        <span>Q<sub>kszt</sub>: </span>
+        <span class="value"> {{ q_kszt }} </span>
+      </p>
+      <p>
+        <span>Q<sub>wyk</sub>: </span>
+        <span class="value"> {{ q_wyk }} </span>
+      </p>
+      <p>
+        <span>Naddatek całkowity (Q<sub>c</sub>): </span>
+        <span class="value"> {{ total_allowances }} </span>
+      </p>
+      <p>
+        <span>Minimalna średnica półfabrykatu (d<sub>PF</sub>): </span>
+        <span class="value"> {{ minBlankDiameter }} </span>
+      </p>
+      <p>
+        <span>Dobrana średnica półfabrykatu (d<sub>PF</sub>): </span>
+        <span class="value"> {{ chosenBlankDiameter }} </span>
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>S<sub>i</sub></th>
+            <th>l<sub>i</sub> [mm]</th>
+            <th>d<sub>i</sub> [mm]</th>
+            <th>T<sub>POi</sub></th>
+            <th>T<sub>PFi</sub></th>
+            <th>K<sub>0</sub></th>
+            <th>IZ</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(level of shaftLevels; track $index; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ level.l | number : "1.2-2" }}</td>
+            <td>{{ level.d | number : "1.2-2" }}</td>
+            <td>{{ level.t_po | number : "1.2-2" }}</td>
+            <td>{{ level.t_pf | number : "1.2-2" }}</td>
+            <td>{{ level.k_0 | number : "1.2-2" }}</td>
+            <td>{{ level.IZ | number : "1.2-2" }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      @for(level of shaftLevels; track $index; let i = $index) {
+      <div>Dla stopnia {{ i + 1 }}: IZ={{ level.IZ }}</div>
+      @if(level.IZ === 3) {
+      <div>Przed obróbką wykańczającą:</div>
+      <div>
+        d<sub>{{ i + 1 }}</sub
+        >={{ level.d | number : "1.2-2" }} + {{ level.wyk }} =
+        {{ level.d + level.wyk }}, przyjmujemy d<sub>{{ i + 1 }}</sub
+        >={{ ceil(level.d + level.wyk, 1) | number : "1.2-2" }}
+      </div>
+      <div>
+        naddatek Q<sub>wyk</sub>=
+        {{ ceil(level.d + level.wyk, 1) - level.d | number : "1.2-2" }}
+      </div>
+      } @if(level.IZ > 1) {
+      <div>Przed obróbką kształtującą:</div>
+      <div>
+        d<sub>{{ i + 1 }}</sub
+        >={{ ceil(level.d + level.wyk, 1) | number : "1.2-2" }} +
+        {{ level.kszt }} = {{ level.d + level.kszt }}, przyjmujemy d<sub>{{
+          i + 1
+        }}</sub
+        >={{ ceil(level.d + level.wyk + level.kszt, 1) | number : "1.2-2" }}
+      </div>
+      <div>
+        naddatek Q<sub>kszt</sub>=
+        {{
+          ceil(level.d + level.wyk + level.kszt, 1) - level.d - level.wyk
+            | number : "1.2-2"
+        }}
+      </div>
+      }
+      <div>Przed obróbką zgrubną:</div>
+      <div>
+        d<sub>{{ i + 1 }}</sub
+        >={{ ceil(level.d + level.wyk + level.kszt, 1) | number : "1.2-2" }} +
+        {{ level.zgr }} = {{ level.d + level.wyk + level.kszt + level.zgr }},
+        przyjmujemy d<sub>{{ i + 1 }}</sub
+        >={{
+          ceil(level.d + level.wyk + level.kszt + level.zgr, 1)
+            | number : "1.2-2"
+        }}
+      </div>
+      <div>
+        naddatek Q<sub>zgrub</sub>=
+        {{
+          ceil(level.d + level.wyk + level.kszt + level.zgr, 1) -
+            level.d -
+            level.wyk -
+            level.kszt | number : "1.2-2"
+        }}
+      </div>
+      }
+    </div>
+  </form>
+</section>
+<!-- <div class="controls">
+  <button (click)="previous.emit()">Wstecz</button>
+  <button (click)="submit()">Dalej</button>
+</div> -->

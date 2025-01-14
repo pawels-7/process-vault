@@ -1,0 +1,193 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+:root {
+  --background-primary: #fff;
+  --color-primary: rgba(122, 138, 176, 0.702);
+  --color-primary-light: rgba(122, 138, 176, 0.3);
+  // --background-secondary: #fcfcfc;
+  --background-secondary: #f7f7f7;
+  --background-tertiary: #fafafa;
+  --background-card: #f9f9f9;
+  --color-text: #999;
+  --color-logo: #bbb;
+  --color-primary-hover: rgb(122, 138, 176, 1);
+  --color-error: #e74c3c;
+  --gradient: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(185, 185, 185, 0.9)
+  );
+  --gradient-hover: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(185, 185, 185, 0.9)
+  );
+  --color-arrows: rgba(0, 0, 0, 1);
+  --link-border: #ddd;
+  --color-link: #8e8e8e;
+  --background-input: #f1f1f1;
+}
+
+[data-theme="dark"] {
+  --background-primary: #121212;
+  // --color-primary: #b1c2ff;
+  // --color-primary: #7a8ab0;
+  --color-primary: #7a8ab0b3;
+  // --background-secondary: #161616;
+  --background-secondary: #181818;
+  --background-tertiary: #1f1f1f;
+  --background-card: #1a1a1a;
+  --color-text: #999;
+  --color-logo: #999;
+  --gradient: linear-gradient(
+    120deg,
+    rgba(61, 61, 61, 0.96),
+    rgba(0, 0, 0, 0.96)
+  );
+  --gradient-hover: linear-gradient(
+    120deg,
+    rgba(61, 61, 61, 1),
+    rgba(0, 0, 0, 1)
+  );
+  --color-arrows: rgba(255, 255, 255, 1);
+  --link-border: #333;
+  --color-link: #999;
+  --background-input: #333;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; // 1rem = 10px, 10px/16px = 62.5%
+
+  @media only screen and (min-width: 1200px) {
+    font-size: 75%;
+  }
+
+  @media only screen and (min-width: 1800px) {
+    font-size: 100%;
+  }
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  // min-height: 100vh;
+  background-color: var(--background-primary);
+  height: 100vh;
+}
+
+::selection {
+  background-color: rgba(0, 75, 255, 0.3);
+  color: white;
+}
+
+/* Tła */
+//--background-light: #ffffff; /* Tło główne (biały) */
+//--background-panel-light: #f7f7f7; /* Tło paneli (jasny szary) */
+//--background-section-light: #eaeaea; /* Tło sekcji (bardzo jasny szary) */
+
+/* Tekst */
+//--text-dark: #2c3e50; /* Tekst główny (ciemny szary) */
+//--text-light: #1a1a1a; /* Tekst pomocniczy (bardzo ciemny szary) */
+//--text-secondary: #7a8ab0b3; /* Tekst sekundarny (twój kolor główny) */
+//--text-link: #2980b9; /* Kolor linków (średni niebieski) */
+
+/* Przyciski */
+//--button-primary: #7a8ab0; /* Aktywny przycisk (twój kolor główny) */
+//--button-secondary: #bdc3c7; /* Przyciski nieaktywne (jasny szary) */
+//--button-hover: #4c6c8c; /* Przyciski po najechaniu (ciemniejszy niebieski) */
+
+/* Elementy interaktywne */
+//--input-active: #2980b9; /* Aktywny kolor dla inputów, checkboxów, suwaków */
+//--input-inactive: #bdc3c7; /* Nieaktywny kolor dla inputów, checkboxów */
+
+/* Tła */
+//--background-dark: #1e1e1e; /* Tło główne (ciemny szary) */
+//--background-panel-dark: #2c3e50; /* Tło paneli (ciemny niebieski) */
+//--background-section-dark: #34495e; /* Tło sekcji (ciemny niebieski) */
+
+/* Tekst */
+//--text-light-dark: #ecf0f1; /* Tekst główny (bardzo jasny szary) */
+//--text-secondary-dark: #7a8ab0b3; /* Tekst sekundarny (twój kolor główny) */
+//--text-link-dark: #2980b9; /* Kolor linków (średni niebieski) */
+
+/* Przyciski */
+//--button-primary-dark: #7a8ab0; /* Aktywny przycisk (twój kolor główny) */
+//--button-secondary-dark: #34495e; /* Przyciski nieaktywne (ciemny niebieski) */
+//--button-hover-dark: #4c6c8c; /* Przyciski po najechaniu (ciemniejszy niebieski) */
+
+/* Elementy interaktywne */
+//--input-active-dark: #2980b9; /* Aktywny kolor dla inputów, checkboxów, suwaków */
+//--input-inactive-dark: #34495e; /* Nieaktywny kolor dla inputów, checkboxów */
+
+/* Ogólne */
+//--border-color-light: #bdc3c7; /* Kolor granicy dla jasnego motywu */
+//--border-color-dark: #34495e; /* Kolor granicy dla ciemnego motywu */
+
+/* Hovers */
+//--hover-background-light: #f1f1f1; /* Tło przycisków/elementów po najechaniu (jasne tło) */
+//--hover-background-dark: #333333; /* Tło przycisków/elementów po najechaniu (ciemne tło) */
+
+:root {
+  --background: #ffffff; /* Tło główne (biały) */
+  --background-panel: #f7f7f7; /* Tło paneli (jasny szary) */
+  --background-section: #eaeaea; /* Tło sekcji (bardzo jasny szary) */
+
+  /* Tekst */
+  --text-dark: #2c3e50; /* Tekst główny (ciemny szary) */
+  --text-light: #1a1a1a; /* Tekst pomocniczy (bardzo ciemny szary) */
+  --text-secondary: #7a8ab0b3; /* Tekst sekundarny (twój kolor główny) */
+  --text-link: #2980b9; /* Kolor linków (średni niebieski) */
+
+  /* Przyciski */
+  --button-primary: #7a8ab0; /* Aktywny przycisk (twój kolor główny) */
+  --button-secondary: #bdc3c7; /* Przyciski nieaktywne (jasny szary) */
+  --button-hover: #4c6c8c; /* Przyciski po najechaniu (ciemniejszy niebieski) */
+
+  /* Elementy interaktywne */
+  --input-active: #2980b9; /* Aktywny kolor dla inputów, checkboxów, suwaków */
+  --input-inactive: #bdc3c7; /* Nieaktywny kolor dla inputów, checkboxów */
+
+  /* Ogólne */
+  --border-color: #bdc3c7; /* Kolor granicy dla jasnego motywu */
+
+  /* Hovers */
+  --hover-background: #f1f1f1; /* Tło przycisków/elementów po najechaniu (jasne tło) */
+}
+
+[data-theme="dark"] {
+  // ciemny motyw
+  /* Tła */
+  --background: #1e1e1e; /* Tło główne (ciemny szary) */
+  --background-panel: #2c3e50; /* Tło paneli (ciemny niebieski) */
+  --background-section: #34495e; /* Tło sekcji (ciemny niebieski) */
+
+  /* Tekst */
+  --text-light: #ecf0f1; /* Tekst główny (bardzo jasny szary) */
+  --text-secondary: #7a8ab0b3; /* Tekst sekundarny (twój kolor główny) */
+  --text-link: #2980b9; /* Kolor linków (średni niebieski) */
+
+  /* Przyciski */
+  --button-primary: #7a8ab0; /* Aktywny przycisk (twój kolor główny) */
+  --button-secondary: #34495e; /* Przyciski nieaktywne (ciemny niebieski) */
+  --button-hover: #4c6c8c; /* Przyciski po najechaniu (ciemniejszy niebieski) */
+
+  /* Elementy interaktywne */
+  --input-active: #2980b9; /* Aktywny kolor dla inputów, checkboxów, suwaków */
+  --input-inactive: #34495e; /* Nieaktywny kolor dla inputów, checkboxów */
+
+  --border-color: #34495e; /* Kolor granicy dla ciemnego motywu */
+  --hover-background: #333333; /* Tło przycisków/elementów po najechaniu (ciemne tło) */
+}

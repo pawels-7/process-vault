@@ -1,0 +1,33 @@
+<section>
+  <form [formGroup]="processesForm">
+    <div class="processes" formArrayName="processes">
+      @for (processControl of processes.controls; let i = $index; track
+      processControl.value.processId) {
+      <div class="group" [formGroupName]="i">
+        <h4 class="group-label">Proces {{ i + 1 }}</h4>
+        <a type="button" class="remove" (click)="removeProcess(i)"> × </a>
+        <div class="column">
+          <div class="control" formGroupName="blank">
+            <label for="blankName">Nazwa półfabrykatu</label>
+            <input
+              id="blankName"
+              name="blankName"
+              type="text"
+              placeholder="Nazwa półfabrykatu"
+              formControlName="name"
+              required
+              (change)="updateProjectProcesses()"
+            />
+          </div>
+        </div>
+      </div>
+      }
+      <!-- ### -->
+      <div class="add-blank">
+        <button type="button" class="add-blank-btn" (click)="addProcess()">
+          +
+        </button>
+      </div>
+    </div>
+  </form>
+</section>

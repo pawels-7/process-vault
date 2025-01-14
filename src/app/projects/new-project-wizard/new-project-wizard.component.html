@@ -1,0 +1,115 @@
+<div class="column">
+  <div class="controls">
+    <button
+      class="prev action"
+      (click)="goToPreviousStep()"
+      [disabled]="currentStep === 1"
+    >
+      Wstecz
+    </button>
+    <div class="info">
+      <h2 class="title">
+        @if (currentStep === 1) {
+        <span>Podstawowe dane projektu</span>
+        } @else if (currentStep === 2) {
+        <span>Przedmiot obrabiany</span>
+        }
+        <!-- @else if (currentStep === 3) {
+        <span>Obliczenia</span>
+        }  -->
+        @else if (currentStep === 3) {
+        <span>Dodawanie procesów</span>
+        } @else if (currentStep === 4) {
+        <span>Operacje procesu:</span>
+        {{ getCurrentProcessName() }}
+        } @else if (currentStep === 5) {
+        <span>Operacja {{ (currentOperationIndex + 1) * 10 }}: </span>
+        {{ getCurrentOperationName() }}
+        }
+      </h2>
+
+      <button class="show-nav action" (click)="toggleNavigation()">𝄘</button>
+    </div>
+    <button class="next action" (click)="goToNextStep()">
+      @if (currentStep === 5 && !projectService.canNextOperation() &&
+      !projectService.canNextProcess()) { Zakończ } @else { Dalej }
+    </button>
+  </div>
+
+  <div class="content">
+    <router-outlet />
+  </div>
+</div>
+@if (showNavigation) {
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <a class="close" (click)="closeNavigation()">×</a>
+      <h2>Nawigacja</h2>
+    </div>
+    <div class="modal-body">
+      <div class="navigation-tree">
+        <ul>
+          <li>
+            <a [class.active]="currentStep === 1" (click)="handleNavigation(1)">
+              1. Podstawowe dane projektu</a
+            >
+          </li>
+          <li>
+            <a [class.active]="currentStep === 2" (click)="handleNavigation(2)"
+              >2. Przedmiot obrabiany</a
+            >
+          </li>
+          <!-- <li>
+            <a [class.active]="currentStep === 3" (click)="handleNavigation(3)"
+              >3. Obliczenia</a
+            >
+          </li> -->
+          <li>
+            <a [class.active]="currentStep === 3" (click)="handleNavigation(3)"
+              >3. Dodawanie procesów</a
+            >
+          </li>
+          @for( process of currentProject.processes; track process; let i =
+          $index) {
+
+          <li>
+            <a
+              [class.active]="
+                currentStep === 4 &&
+                projectService.getCurrentProcessIndex() === i
+              "
+              (click)="handleNavigation(4, i)"
+            >
+              Proces: {{ process.blank.name || i + 1 }}
+            </a>
+            @for( operation of process.operations; track operation; let j =
+            $index) {
+
+            <ul>
+              <li>
+                <a
+                  [class.active]="
+                    currentStep === 5 &&
+                    projectService.getCurrentProcessIndex() === i &&
+                    projectService.getCurrentOperationIndex() === j
+                  "
+                  (click)="handleNavigation(5, i, j)"
+                >
+                  {{ i + 1 }}. {{ (j + 1) * 10 }}. Operacja {{ (j + 1) * 10 }}:
+                  {{ operation.operationName || j + 1 }}
+                </a>
+              </li>
+            </ul>
+            }
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="closeNavigation()">Zamknij</button>
+    </div>
+  </div>
+</div>
+}

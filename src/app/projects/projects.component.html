@@ -1,0 +1,31 @@
+<form>
+  <button [routerLink]="['/new-project']">
+    <i class="fas fa-plus"></i> Nowy Projekt
+  </button>
+</form>
+
+@if(isLoading()) {
+<app-loading-spinner class="loading-spinner" />
+} @else {
+<div class="processes-container">
+  <div class="projects">
+    @for(project of projects(); track project.projectId) {
+    <app-project-card
+      [project]="project"
+      (select)="onSelectProject($event)"
+      (delete)="onDeleteProject(project.projectId)"
+    ></app-project-card>
+    } @empty {
+    <article class="no-processes-card">
+      <div class="text">
+        <p class="no-processes">brak projektów</p>
+        <p class="no-processes">dodaj nowy</p>
+        <a class="add-process" routerLink="/new-project">&plus;</a>
+      </div>
+    </article>
+    }
+  </div>
+</div>
+}
+
+<!-- [routerLink]="['/projects', project.projectId]" -->

@@ -1,0 +1,140 @@
+:host {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+aside {
+  height: 100%;
+  width: 100%;
+  // background-color: rgba(238, 238, 238, 0.2);
+  background-color: var(--background-secondary);
+  border-right: 1px solid var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer {
+  // color: rgba(15, 15, 15, 0.3);
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.6em;
+}
+
+ul {
+  margin: 40px 0;
+  font-size: inherit;
+}
+
+li {
+  list-style: none;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid rgba(200, 200, 200, 0.1);
+  background-color: var(--background-tertiary);
+  border-radius: 3px;
+  transition: all 0.2s;
+  cursor: pointer;
+  color: #999;
+  text-transform: capitalize;
+}
+
+li:not(:last-of-type) {
+  margin-bottom: 15px;
+}
+
+li:hover {
+  // background-color: rgba(0, 75, 255, 0.3);
+  background-color: var(--color-primary);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 1.6em;
+}
+
+li:hover a {
+  color: #fff;
+}
+
+.selected {
+  // background-color: rgba(0, 75, 255, 0.3);
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.selected a {
+  color: #fff;
+}
+
+.selected:hover {
+  // background-color: rgba(0, 75, 255, 0.3);
+  background-color: var(--color-primary);
+}
+
+// .logo {
+//   color: var(--color-logo);
+//   font-size: 30px;
+//   transition: all 0.2s;
+//   margin-top: 1.5rem;
+// }
+
+// .logo:hover {
+//   // text-shadow: 1px 1px 15px rgba(0, 75, 255, 0.4);
+//   text-shadow: 1px 1px 15px var(--color-primary);
+//   // color: rgba(0, 75, 255, 0.3);
+//   color: var(--color-primary);
+//   transform: translateY(-2px) skewX(-5deg);
+// }
+
+.logo {
+  width: 100%;
+  margin-top: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+  clip-path: circle(30% at 50% 50%);
+  background-color: transparent;
+
+  img {
+    height: 10rem;
+  }
+
+  &:hover {
+    box-shadow: 1px 1px 15px var(--color-primary);
+    transform: scale(1.05);
+  }
+}
+
+.logout {
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.logout:hover {
+  // color: rgba(0, 75, 255, 0.3);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.theme {
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.5rem;
+  // margin-bottom: 2.5rem;
+  border: none;
+  border-radius: 5px;
+  // background-color: rgba(0, 75, 255, 0.4);
+
+  background-color: var(--color-primary);
+
+  padding: 0.5rem 1rem;
+}

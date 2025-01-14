@@ -1,0 +1,102 @@
+<section>
+  <div class="row">
+    <button class="return" (click)="goBack()">&LeftArrow;</button>
+    <h3 class="operation-name">
+      Operacja {{ operation?.sequence }}:{{ operation!.operationName }}
+    </h3>
+  </div>
+  <form>
+    <div class="part mountings">
+      <div class="column">
+        <div class="row mounting-label">
+          <button
+            class="mountings-nav prev"
+            type="button"
+            (click)="previousFixture()"
+            [disabled]="currentFixtureIndex === 0"
+          >
+            &LeftTriangle;
+          </button>
+          <label class="mounting-label" for="mounting"
+            >Zamocowanie {{ currentFixtureIndex + 1 }}</label
+          >
+          <button
+            class="mountings-nav"
+            type="button"
+            (click)="nextFixture()"
+            [disabled]="currentFixtureIndex === operation!.setups.length - 1"
+          >
+            &RightTriangle;
+          </button>
+        </div>
+        <div class="photo">
+          @if(operation!.setups[currentFixtureIndex].drawing) {
+          <img
+            [src]="operation!.setups[currentFixtureIndex].drawing"
+            alt="Podgląd rysunku"
+            class="drawing-preview"
+          />
+          } @else {
+          <div>Brak rysunku</div>
+          }
+        </div>
+      </div>
+
+      <div class="part treatments-part">
+        <div class="row">
+          <label class="treatments-label" for="treatment"
+            >Zabiegi obróbkowe</label
+          >
+        </div>
+
+        <div class="treatments" formArrayName="tasks">
+          <table>
+            <thead>
+              <tr>
+                <th>Nr</th>
+                <th>Opis zabiegu</th>
+                <th>Dp</th>
+                <th>Dk</th>
+                <th>L</th>
+                <th>Ap</th>
+                <th>f</th>
+                <th>Vc</th>
+                <th>n</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(task of operation!.setups[currentFixtureIndex].tasks; track
+              task; let i = $index) {
+              <tr>
+                <td>{{ task.sequence }}</td>
+                <td class="td-left">{{ task.taskName }}</td>
+                <td>
+                  {{ task.conditions.Dp ? task.conditions.Dp : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.Dk ? task.conditions.Dk : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.L ? task.conditions.L : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.Ap ? task.conditions.Ap : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.f ? task.conditions.f : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.Vc ? task.conditions.Vc : "-" }}
+                </td>
+                <td>
+                  {{ task.conditions.n ? task.conditions.n : "-" }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,24 @@
+<article>
+  <div class="img">
+    <img (click)="onClick()" src="{{ project().workpiece.drawing }}" alt="" />
+  </div>
+  <div class="project-info">
+    <div class="project-text">
+      <div class="project-name" (click)="onClick()">
+        {{ project().partName }}
+      </div>
+      <div class="project-product">{{ project().productName }}</div>
+    </div>
+    <div class="project-date">
+      <div class="date-label">Data realizacji zlecenia</div>
+      <div class="date-value">
+        {{ project().order.completionDate | date : "dd.MM.yyyy" }}
+      </div>
+    </div>
+  </div>
+  @if(project().projectId !== 1) {
+  <div class="actions">
+    <a class="delete" (click)="onDelete()">&times;</a>
+  </div>
+  }
+</article>

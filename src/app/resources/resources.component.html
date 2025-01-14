@@ -1,0 +1,263 @@
+<div class="resources">
+  <h1>Zasoby</h1>
+
+  <div class="row">
+    <div class="column">
+      <!-- Departamenty -->
+      <div class="element">
+        <h2>Wydziały</h2>
+        <div class="control">
+          <input
+            type="text"
+            [(ngModel)]="departmentSearchTerm"
+            placeholder="Szukaj wydziału..."
+          />
+          <button (click)="openAddNewModal('department')">Nowy Wydział</button>
+        </div>
+        <div class="row">
+          <ul>
+            <li
+              *ngFor="
+                let department of filterList(
+                  departments,
+                  departmentSearchTerm,
+                  'name'
+                )
+              "
+            >
+              <span (click)="selectDepartment(department)">
+                {{ department.name }}
+              </span>
+              <button
+                class="edit-button"
+                *ngIf="department.userId !== null"
+                (click)="editItem('department', department)"
+              >
+                Edytuj
+              </button>
+            </li>
+          </ul>
+
+          <!-- Stacje robocze w wybranym departamencie -->
+          <div class="workstations" *ngIf="selectedDepartment">
+            <h3>Stanowiska w {{ selectedDepartment.name }}</h3>
+            <div class="control">
+              <input
+                type="text"
+                [(ngModel)]="workstationSearchTerm"
+                placeholder="Szukaj stanowiska..."
+              />
+              <button (click)="openAddNewModal('workstation')">
+                Nowe stanowisko
+              </button>
+            </div>
+            <ul>
+              <li
+                *ngFor="
+                  let workstation of filterList(
+                    workstations,
+                    workstationSearchTerm,
+                    'symbol'
+                  )
+                "
+              >
+                {{ workstation.symbol }} - {{ workstation.machineType }}
+                {{ workstation.type }}
+                <button
+                  class="edit-button"
+                  (click)="editItem('workstation', workstation)"
+                >
+                  Edytuj
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="element smaller">
+        <!-- Narzędzia pomiarowe -->
+        <h2>Narzędzia pomiarowe</h2>
+        <div class="control">
+          <input
+            type="text"
+            [(ngModel)]="deviceSearchTerm"
+            placeholder="Szukaj narzędzi..."
+          />
+          <button (click)="openAddNewModal('measuringtool')">
+            Nowe narzędzie
+          </button>
+        </div>
+        <ul>
+          <li
+            *ngFor="
+              let tool of filterList(measuringTools, deviceSearchTerm, 'name')
+            "
+          >
+            <span class="tool-name">
+              {{ tool.name }}
+            </span>
+            @if(tool.userId !== null) {
+            <button
+              class="edit-button"
+              (click)="editItem('measuringtool', tool)"
+            >
+              Edytuj
+            </button>
+            <button
+              class="remove-button"
+              (click)="deleteItem('measuringtool', tool)"
+            >
+              Usuń
+            </button>
+            }
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="column">
+      <!-- Narzędzia tnące -->
+      <div class="element">
+        <h2>Narzędzia i uchwyty narzędziowe</h2>
+        <div class="control">
+          <input
+            type="text"
+            [(ngModel)]="toolSearchTerm"
+            placeholder="Szukaj narzędzi..."
+          />
+          <select [(ngModel)]="selectedToolType">
+            <option value="">Wszystkie</option>
+            <option value="insert">Płytka</option>
+            <option value="holder">Uchwyt</option>
+            <option value="other">Inne</option>
+          </select>
+          <button (click)="openAddNewModal('cuttingtool')">
+            Nowe narzędzie
+          </button>
+        </div>
+        <ul>
+          <li *ngFor="let tool of filterCuttingTools()">
+            <span class="tool-name"> {{ tool.name }} ({{ tool.type }}) </span>
+            @if(tool.userId !== null) {
+            <button class="edit-button" (click)="editItem('cuttingtool', tool)">
+              Edytuj
+            </button>
+            <button
+              class="remove-button"
+              (click)="deleteItem('cuttingtool', tool)"
+            >
+              Usuń
+            </button>
+            }
+          </li>
+        </ul>
+      </div>
+      <!-- Uchwyty narzędziowe -->
+      <div class="element">
+        <h2>Przyrządy i uchwyty obróbkowe</h2>
+        <div class="control">
+          <input
+            type="text"
+            [(ngModel)]="deviceSearchTerm"
+            placeholder="Szukaj przyrządów..."
+          />
+          <button (click)="openAddNewModal('workholdingdevice')">
+            Nowy Przyrząd
+          </button>
+        </div>
+        <ul>
+          <li
+            *ngFor="
+              let device of filterList(
+                workHoldingDevices,
+                deviceSearchTerm,
+                'name'
+              )
+            "
+          >
+            <span class="tool-name">
+              {{ device.name }}
+            </span>
+            @if(device.userId !== null) {
+            <button
+              class="edit-button"
+              (click)="editItem('workholdingdevice', device)"
+            >
+              Edytuj
+            </button>
+            <button
+              class="remove-button"
+              (click)="deleteItem('workholdingdevice', device)"
+            >
+              Usuń
+            </button>
+            }
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>
+      {{ isEditing ? "Edytowanie" : "Dodawanie" }}
+      {{ getDisplayItemName(newItemType) }}
+    </h3>
+
+    <!-- Department -->
+    <div *ngIf="newItemType === 'department'">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="newItemData.name" />
+    </div>
+
+    <!-- Workstation -->
+    <div *ngIf="newItemType === 'workstation'">
+      <label>Symbol:</label>
+      <input type="text" [(ngModel)]="newItemData.symbol" />
+      <label>Maszyna:</label>
+      <input type="text" [(ngModel)]="newItemData.machineType" />
+      <label>Typ:</label>
+      <input type="text" [(ngModel)]="newItemData.type" />
+      <label>Wydział:</label>
+      <select [(ngModel)]="newItemData.departmentId">
+        <option
+          *ngFor="let department of departments"
+          [value]="department.departmentId"
+        >
+          {{ department.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Cutting Tool -->
+    <div *ngIf="newItemType === 'cuttingtool'">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="newItemData.name" />
+      <label>Type:</label>
+      <select [(ngModel)]="newItemData.type">
+        <option value="insert">Insert</option>
+        <option value="holder">Holder</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Measuring Tool -->
+    <div *ngIf="newItemType === 'measuringtool'">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="newItemData.name" />
+    </div>
+
+    <!-- Work Holding Device -->
+    <div *ngIf="newItemType === 'workholdingdevice'">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="newItemData.name" />
+    </div>
+
+    <button (click)="saveNewItem()">Zapisz</button>
+    <button (click)="closeModal()">Anuluj</button>
+  </div>
+</div>

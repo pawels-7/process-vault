@@ -1,0 +1,14 @@
+<!-- <app-header></app-header> -->
+
+<div [class.grid-layout]="isAuthenticated()">
+  @if(isAuthenticated()) {
+  <app-nav></app-nav>
+  }
+
+  <!-- <app-home></app-home> -->
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- [style.grid-column]="isAuthenticated() ? '2 / 3' : '1 / 3'" -->

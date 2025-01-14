@@ -1,0 +1,66 @@
+:host {
+  height: 100%;
+  background-color: var(--background-secondary);
+  display: block;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 90vh 10vh;
+  }
+
+  overflow-y: auto;
+
+  // scrollbar
+  &::-webkit-scrollbar {
+    width: 0.5em;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--background-secondary);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 10px;
+  }
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  grid-template-rows: 1fr;
+}
+
+main {
+  grid-column: 2 / 3;
+  overflow-y: auto;
+  height: 100vh;
+
+  background-color: transparent;
+  // -webkit-backdrop-filter: blur(10px);
+  // backdrop-filter: blur(10px);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(0, 0, 0, 0.1)
+  );
+
+  @media (max-width: 500px) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    // height: 500px;
+    overflow: scroll;
+  }
+
+  overflow-y: auto;
+
+  // scrollbar
+  &::-webkit-scrollbar {
+    width: 1em;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: var(--background-secondary);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 10px;
+  }
+}

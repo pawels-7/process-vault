@@ -1,0 +1,134 @@
+<div class="controls">
+  <!-- <button class="action"> -->
+  <!-- class="action"
+    [style]="{ visibility: currentStep === 0 ? 'hidden' : 'visible' }"
+    (click)="previousStep()"
+    -->
+  <!-- Wstecz -->
+  <!-- </button> -->
+
+  <div class="info">
+    <h2 class="title">
+      @if(currentStep === 1) {
+      <span>Podstawowe dane projektu</span>
+      } @if(currentStep === 2) {
+      <span>Przedmiot obrabiany</span>
+      }@if(currentStep === 3) {
+      <span>Obliczenia</span>
+      } @if(currentStep === 4) {
+      <span>Dodawanie procesów</span>
+      } @if(currentStep === 5) {
+      <span>Operacje procesu {{ currentProcess + 1 }}:</span>
+      {{ getCurrentProcessName() }}
+      } @if(currentStep === 6) {
+      <span>Zamocowania operacji {{ currentProcess + 1 }}:</span>
+      {{ getCurrentOperationName() }}
+      }
+    </h2>
+
+    <button (click)="toggleNavigation()" class="show-nav action">𝄘</button>
+  </div>
+  <!-- <a class="next" href="#">𝄘</a> -->
+  <!-- <a class="next" routerLink="/add-process/drawing">&rarr;</a> -->
+  <!-- <button class="action"> -->
+  <!-- class="action"
+    [style]="{
+      visibility: currentStep === steps.length - 1 ? 'hidden' : 'visible'
+    }"
+    (click)="nextStep()" -->
+  <!-- Dalej -->
+  <!-- </button> -->
+</div>
+
+<router-outlet />
+@if(currentStep === 1) {
+<app-new-project-basic (next)="goToStep(2)" />
+} @if(currentStep === 2) {
+<app-new-project-drawing (next)="goToStep(3)" (previous)="goToStep(1)" />
+} @if(currentStep === 3) {
+<app-new-project-calculations (next)="goToStep(4)" (previous)="goToStep(2)" />
+} @if(currentStep === 4) {
+<app-new-project-processes (next)="startOperations(0)" (previous)="goToStep(3)" />
+} @if(currentStep === 5) {
+<app-new-project-operations
+  (next)="startFixtures(currentProcess, 0)"
+  (previous)="previousProcess()"
+  [processIndex]="currentProcess"
+/>
+} @if(currentStep === 6) {
+<app-new-project-operation-detail
+  [processIndex]="currentProcess"
+  [operationIndex]="currentOperation"
+  (next)="nextOperation()"
+  (previous)="previousProcess()"
+/>
+}
+<!-- @if(currentStep === 5) {
+<app-new-process-structure />
+} -->
+
+@if (showNavigation) {
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <a class="close" (click)="toggleNavigation()">&times;</a>
+      <h2>Nawigacja</h2>
+    </div>
+    <div class="modal-body">
+      <div class="navigation-tree">
+        <ul>
+          <li>
+            <a
+              [class.active]="currentStep === 1"
+              (click)="goToStep(1); toggleNavigation()"
+              >1. Podstawowe dane projektu</a
+            >
+          </li>
+          <li>
+            <a
+              [class.active]="currentStep === 2"
+              (click)="goToStep(2); toggleNavigation()"
+              >2. Przedmiot obrabiany</a
+            >
+          </li>
+          <li>
+            <a
+              [class.active]="currentStep === 3"
+              (click)="goToStep(3); toggleNavigation()"
+              >3. Dodawanie procesów</a
+            >
+            <ul>
+              @for(process of getProcesses(); track process; let i = $index) {
+              <li>
+                <a (click)="startOperations(i); toggleNavigation()">
+                  Proces {{ i + 1 }}:{{ process.blank }}
+                </a>
+                <ul>
+                  @for(operation of process.operations; track operation.id; let
+                  j = $index) {
+                  <li>
+                    <a (click)="startFixtures(i, j)">
+                      Operacja {{ j + 1 }}:{{ operation.name }}
+                    </a>
+                    <!-- <ul>
+                      <li *ngFor="let fixture of operation.fixtures">
+                        Fixture: {{ fixture.drawing }}
+                      </li>
+                    </ul> -->
+                  </li>
+                  }
+                </ul>
+              </li>
+
+              }
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="toggleNavigation()">Zamknij</button>
+    </div>
+  </div>
+</div>
+}

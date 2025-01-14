@@ -1,0 +1,252 @@
+<article>
+  <div class="process">
+    <div class="process-name">{{ project()?.name }}</div>
+    <div class="process-info">
+      <div class="drawing-box">
+        <img class="drawing" [src]="project()?.drawing" alt="" />
+      </div>
+      <div class="process-info-box">
+        <div class="info">
+          <span class="info-label"> Sztuk na wyrób:</span>
+          <span class="info-value">
+            {{ project()?.unitsPerItem }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Sztuk na zleceniu:</span>
+          <span class="info-value">
+            {{ 2500 }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Sztuk na partę:</span>
+          <span class="info-value">
+            {{ 120 }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Data realizacji zlecenia: </span>
+          <span class="info-value">
+            {{ "26.05.2010" }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Materiał:</span>
+          <span class="info-value">
+            {{ "St45" }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Półfabrykat:</span>
+          <span class="info-value">
+            {{ "PW fi50 x 6000" }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Masa 1 sztuki [kg]:</span>
+          <span class="info-value">
+            {{ project()?.weightPerUnitKg }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label"> Norma materiału: </span>
+          <span class="info-value">
+            {{ project()?.materialNormPerUnit }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Materiał na partię:</span>
+          <span class="info-value">
+            {{ project()?.materialNormPerUnit }}
+          </span>
+        </div>
+        <div class="info">
+          <span class="info-label">Koszt materiału [PLN]:</span>
+          <span class="info-value">
+            {{ 0.0 }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="operations">
+      <span class="operations-label">Operacje</span>
+
+      @for(operation of project()?.operations; track operation.id) {
+      <div
+        class="operation"
+        (click)="showModal.set(true); selectedOperation.set($index)"
+      >
+        Operacja {{ operation.id }} - {{ operation.operationName }}
+        <button>Pobierz</button>
+      </div>
+      <!-- 
+      Zamocowania @for (fixture of operation.fixtures; track $index) {
+      <div class="fixture">
+        {{ fixture.id }}
+        <img class="fixture-drawing" src="{{ fixture.drawing }}" alt="" />
+      </div>
+      }  -->
+      }
+    </div>
+
+    <button class="btn-card" (click)="onTechCardClick()">
+      karta technologiczna
+    </button>
+  </div>
+</article>
+
+<div class="card">
+  <table>
+    <tr>
+      <td style="font-weight: bold">
+        Karta technologiczna <br />
+        (plan operacyjny)
+      </td>
+      <td>
+        Wyrób <br />reduktor <br />
+        stożkowy
+      </td>
+      <td>Nazwa części <br />{{ project()?.name }}</td>
+      <td>
+        Nr rys. części <br />
+        01
+      </td>
+      <td>Znak</td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td>
+        Gat. i stan mat. <br />
+        C45
+      </td>
+      <td rowspan="2">
+        Postać i wymiary półfabrykatu [mm] <br />
+        D x L = 95 x 427,5
+      </td>
+      <td>
+        Sztuk /wyrób <br />
+        1
+      </td>
+      <td>
+        kg/1 szt. netto <br />
+        &nbsp;
+      </td>
+      <td>Sztuk na zlecenie, partię</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="2">Norma mat. <br />kg/ 1szt.</td>
+      <td>Materiał kg /zlecenie, partię</td>
+    </tr>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nr op</th>
+        <th>Wydział</th>
+        <th rowspan="2">Opis operacji</th>
+        <th rowspan="2">Pomoce warsztatowe</th>
+        <th>Kat.r</th>
+        <th>Tpz</th>
+        <th rowspan="2">T</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Stanowisko</th>
+        <th>dod.</th>
+        <th>tj</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(operation of project()?.operations; track $index) {
+      <tr>
+        <td>{{ $index }}</td>
+        <td>Mechaniczny</td>
+        <td rowspan="2">{{ operation.operationName }}</td>
+        <td rowspan="2"></td>
+        <td></td>
+        <td></td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>prostarka</td>
+        <td></td>
+        <td></td>
+      </tr>
+      }
+      <!-- Add more rows here -->
+    </tbody>
+  </table>
+
+  <table>
+    <tr>
+      <td></td>
+      <td>Opracował</td>
+      <td>Sprawdził</td>
+      <td>Zatwierdził</td>
+    </tr>
+  </table>
+</div>
+
+@if(showModal()){
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <a class="close" (click)="showModal.set(false)">&times;</a>
+      <h2>{{ project()!.operations[selectedOperation()].operationName }}</h2>
+    </div>
+    <div class="modal-body">
+      <img
+        class="fixture-drawing"
+        src="{{
+          project()!.operations[selectedOperation()].fixtures[page()].drawing
+        }}"
+        alt=""
+      />
+      <div class="treatments">
+        <div class="treatments-label">Zabiegi obróbkowe</div>
+        @for (task of
+        project()!.operations[selectedOperation()].fixtures[page()].tasks; track
+        $index) {
+        <div class="treatment">
+          <div class="treatment-name">
+            {{ task.taskName }}
+          </div>
+          <div class="conditions">
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.depthOfCut }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.cuttingSpeed }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedPerRevolution }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedPerTooth }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedRate }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.passes }}
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="page.set(page() - 1)">&LeftArrow;</button>
+      <button (click)="showModal.set(false); page.set(0)">Zamknij</button>
+      <button (click)="page.set(page() + 1)">&RightArrow;</button>
+    </div>
+  </div>
+</div>
+}

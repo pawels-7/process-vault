@@ -1,0 +1,507 @@
+<form [formGroup]="operationDetailForm" class="operation-detail-form">
+  <div class="section">
+    <div class="setup-navigation">
+      <button
+        type="button"
+        (click)="showPreviousSetup()"
+        [disabled]="activeSetupIndex === 0"
+      >
+        Poprzednie
+      </button>
+      <span
+        >Zamocowanie {{ setups.length > 0 ? activeSetupIndex + 1 : 0 }} z
+        {{ setups.length }}</span
+      >
+      <button
+        type="button"
+        (click)="showNextSetup()"
+        [disabled]="
+          activeSetupIndex === setups.length - 1 || setups.length === 0
+        "
+      >
+        Następne
+      </button>
+
+      <button type="button" (click)="addSetup()">Dodaj zamocowanie</button>
+      <button type="button" (click)="removeSetup(activeSetupIndex)">
+        Usuń zamocowanie
+      </button>
+    </div>
+    <div formArrayName="setups">
+      <div
+        *ngIf="setups.length > 0"
+        [formGroupName]="activeSetupIndex"
+        class="setup"
+      >
+        <div class="drawing-section">
+          <input
+            type="file"
+            class="drop-image"
+            accept="image/*"
+            (change)="onImageSelected($event, activeSetupIndex)"
+            [id]="'drawing-' + activeSetupIndex"
+          />
+          @if(!setupPreviews[activeSetupIndex]) {
+          <label for="drawing">Rysunek:</label>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onImageSelected($event, activeSetupIndex)"
+            [id]="'drawing-' + activeSetupIndex"
+          />
+          }
+          <img
+            *ngIf="setupPreviews[activeSetupIndex]"
+            [src]="setupPreviews[activeSetupIndex]"
+            alt="Drawing preview"
+            style="max-width: 300px; margin-top: 10px"
+          />
+          @if(setupPreviews[activeSetupIndex]) {
+          <button
+            type="button"
+            title="Zmień rysunek"
+            class="change-btn"
+            (click)="onChangeDrawing(activeSetupIndex)"
+          >
+            ×
+          </button>
+          }
+        </div>
+        <div formArrayName="activities" class="activities">
+          <div class="row">
+            <h4>Zabiegi obróbkowe</h4>
+            <button
+              type="button"
+              class="add-activity-btn"
+              (click)="addActivity(activeSetupIndex)"
+            >
+              Dodaj zabieg
+            </button>
+            <div style="display: flex; align-items: center">
+              Automatyczne obliczanie:
+              <input
+                type="checkbox"
+                style="margin: 0; height: min-content"
+                (click)="onAutoCalculateChanged($event)"
+                checked
+              />
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Nazwa zabiegu</th>
+                <th>Przejść</th>
+                <th>Narzędzie</th>
+                <th>Dp</th>
+                <th>Dk</th>
+                <th>L</th>
+                <th>Ap</th>
+                <th>f</th>
+                <th>Vc</th>
+                <th>n</th>
+                <th>tg</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (activity of getActivities(activeSetupIndex).controls; track
+              activity; let j = $index) {
+              <tr [formGroupName]="j" class="activity">
+                <td>
+                  <button
+                    class="remove-activity-btn"
+                    type="button"
+                    (click)="removeActivity(activeSetupIndex, j)"
+                  >
+                    ×
+                  </button>
+                  <input
+                    type="text"
+                    id="activityName"
+                    formControlName="activityName"
+                  />
+                </td>
+                <td>
+                  <input type="number" id="passes" formControlName="passes" />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    (click)="openCuttingToolsModal(activity)"
+                  >
+                    @if(activity.get('toolAssembly')?.get('insert')?.value?.name)
+                    {
+                    {{
+                      toolSymbols[
+                        activity.get("toolAssembly")?.get("id")?.value
+                      ]
+                    }}
+                    ({{
+                      activity.get("toolAssembly")?.get("insert")?.value?.name
+                    }}) } @else { Wybierz narzędzie }
+                  </button>
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="Dp" formControlName="Dp" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="Dk" formControlName="Dk" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="L" formControlName="L" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="Ap" formControlName="Ap" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="f" formControlName="f" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="Vc" formControlName="Vc" />
+                </td>
+                <td formGroupName="conditions">
+                  <input type="number" id="n" formControlName="n" />
+                </td>
+                <td formGroupName="conditions">
+                  <input readonly type="number" id="tg" formControlName="tg" />
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <!-- Time Components Section -->
+      <div class="row">
+        <div formArrayName="timeComponents" class="time-components-section">
+          <div class="section-header">
+            <h2>Składniki czasu t<sub>p</sub></h2>
+            <button type="button" (click)="addTimeComponent()">+</button>
+          </div>
+          @for(timeComponent of timeComponents.controls; track timeComponent ;
+          let j = $index) {
+          <div [formGroupName]="j" class="time-component-card">
+            <span class="time-label"
+              >t<sub>p{{ j + 1 }}</sub></span
+            >
+            <input
+              class="time-value"
+              formControlName="name"
+              placeholder="Nazwa"
+              type="text"
+            />
+
+            <button type="button" (click)="removeTimeComponent(j)">×</button>
+          </div>
+          }
+        </div>
+
+        <div class="column" style="margin-left: 2rem">
+          <div>
+            <label for="position">Nr pozycji</label>
+            <input
+              type="number"
+              formControlName="position"
+              placeholder="Nr pozycji"
+            />
+          </div>
+          <div class="activity-times-section workstation">
+            <label class="treatments-label" for="treatment"
+              >Stanowisko robocze</label
+            >
+            <!-- {{ operation?.workstation?.symbol }} -->
+            <button type="button" (click)="openWorkStationModal()">
+              Wybierz
+            </button>
+            @if(currentOperation?.workstation) {
+            <span class="select-label">
+              {{ currentOperation?.workstation?.symbol }}
+            </span>
+            }
+          </div>
+        </div>
+      </div>
+      <!-- Normalization Activities Section -->
+      <div class="activity-times-section">
+        <div formArrayName="normalizationTasks" class="time-components-section">
+          <div class="section-header">
+            <h2>Czynności do normowania czasu t<sub>pz</sub></h2>
+            <button type="button" (click)="addNormalizationTask()">+</button>
+          </div>
+          @for(activity of normalizationTasks.controls; track activity ; let j =
+          $index) {
+          <div [formGroupName]="j" class="time-component-card">
+            <div class="time-label">{{ j + 1 }}</div>
+            <input
+              class="time-value"
+              formControlName="name"
+              type="text"
+              placeholder="Nazwa"
+            />
+            <input
+              class="time-value"
+              formControlName="timeMinutes"
+              type="number"
+              step="0.01"
+            />
+            [min]
+            <button type="button" (click)="removeNormalizationTask(j)">
+              ×
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="activity-times-section">
+        <h2>Składniki t<sub>p</sub></h2>
+        <!-- @for(setup of setups.controls; track setup; let setupIndex = $index) { -->
+        @for(activity of getActivities(activeSetupIndex).controls; track
+        activity; let activityIndex = $index) {
+        <div class="activity-time-group">
+          <h3>{{ $index + 1 }}: {{ activity.get("activityName")?.value }}</h3>
+          @for(timeComponent of timeComponents.controls; track timeComponent;
+          let timeIndex = $index) {
+          <div class="time-row">
+            <span class="time-label"
+              >t<sub>p{{ timeIndex + 1 }}</sub></span
+            >
+            <input
+              type="number"
+              [formControl]="
+                getTimeComponentControl(
+                  activeSetupIndex,
+                  activityIndex,
+                  timeIndex
+                )
+              "
+              min="0"
+              step="0.01"
+            />
+            <span class="unit">min</span>
+          </div>
+          }
+        </div>
+        }
+        <!-- } -->
+      </div>
+    </div>
+    <div class="column">
+      <div class="time-components-section">
+        <div class="section-header">
+          <h2>Przyrządy i uchwyty obróbkowe</h2>
+          <button type="button" (click)="openWorkHoldingDevicesModal()">
+            +
+          </button>
+        </div>
+        <ul>
+          @for( device of currentOperation?.workHoldingDevices; track device) {
+          <li>
+            <span>
+              {{ device.name }}
+            </span>
+            <button type="button" (click)="removeWorkHoldingDevice($index)">
+              &times;
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
+      <div class="time-components-section activity-times-section">
+        <div class="section-header">
+          <h2 class="treatments-label" for="treatment">
+            Narzędzia i uchwyty narzędziowe
+          </h2>
+        </div>
+        <ul>
+          @for(activity of getActivities(activeSetupIndex).controls; track
+          activity) { @if (activity.get('tool')?.value) {
+          <li>
+            {{ $index + 1 }}:
+            {{ activity.get("tool")?.value?.name }}
+          </li>
+          } @if(activity.get('toolAssembly')?.value) {
+          <li>
+            {{ $index + 1 }}:
+            {{ activity.get("toolAssembly")?.value?.holder?.name }} +
+            {{ activity.get("toolAssembly")?.value?.insert?.name }}
+          </li>
+          } }
+        </ul>
+      </div>
+
+      <div class="time-component-section activity-times-section">
+        <div class="section-header">
+          <h2 class="treatments-label" for="treatment">Narzędzia pomiarowe</h2>
+          <button type="button" (click)="openMeasuringToolsModal()">+</button>
+        </div>
+        <ul>
+          @for( tool of currentOperation?.measuringTools; track tool) {
+          <li>
+            <span>
+              {{ tool.name }}
+            </span>
+            <button
+              type="button"
+              (click)="removeOperationMeasuringTool($index)"
+            >
+              &times;
+            </button>
+          </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+  <label for="treatment">
+    Opracował
+    <input type="text" formControlName="developedBy" placeholder="Opracował" />
+  </label>
+  <label for="treatment">
+    Sprawdził
+    <input type="text" formControlName="checkedBy" placeholder="Sprawdził" />
+  </label>
+  <label for="treatment">
+    Zatwierdził
+    <input type="text" formControlName="approvedBy" placeholder="Zatwierdził" />
+  </label>
+</form>
+
+<!-- Modale -->
+@if (isWorkHoldingDevicesModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>Wybór przyrządu/uchwytu obróbkowego</h2>
+
+    <!-- Wyszukiwanie -->
+    <div class="search-container">
+      <input
+        type="text"
+        [formControl]="searchWorkHoldingDevicesControl"
+        placeholder="Szukaj..."
+      />
+    </div>
+
+    <div class="resource-list">
+      @for(device of getFilteredWorkHoldingDevices(); track device) {
+      <div class="resource-item" (click)="selectWorkHoldingDevice(device)">
+        <span>{{ device.name }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="btn"
+        (click)="closeWorkHoldingDevicesModal()"
+      >
+        Zamknij
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Analogiczne modale dla pozostałych zasobów -->
+@if (isCuttingToolsModalOpen) {
+<!-- Modal dla uchwytów narzędziowych -->
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>Wybór narzędzia/uchwytu narzędziowego</h2>
+
+    <!-- Wyszukiwanie -->
+    <div class="search-container">
+      <input
+        type="text"
+        [formControl]="searchCuttingToolsControl"
+        placeholder="Szukaj..."
+      />
+    </div>
+
+    <div class="resource-list">
+      @for(tool of getFilteredCuttingTools(); track tool) {
+      <div
+        class="resource-item"
+        [class.selected]="selectedTools.includes(tool)"
+        (click)="selectCuttingTool(tool)"
+      >
+        <span>{{ tool.name }}</span>
+        <span>{{ tool.type }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" (click)="closeCuttingToolsModal()">
+        {{ selectedTools.length > 0 ? "Zatwierdź" : "Zamknij" }}
+      </button>
+    </div>
+  </div>
+</div>
+} @if (isMeasuringToolsModalOpen) {
+<!-- Modal dla narzędzi pomiarowych -->
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>Wybór narzędzia pomiarowego</h2>
+
+    <!-- Wyszukiwanie -->
+    <div class="search-container">
+      <input
+        type="text"
+        [formControl]="searchMeasuringToolsControl"
+        placeholder="Szukaj..."
+      />
+    </div>
+
+    <div class="resource-list">
+      @for(tool of getFilteredMeasuringTools(); track tool) {
+      <div class="resource-item" (click)="selectMeasuringTool(tool)">
+        <span>{{ tool.name }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" (click)="closeMeasuringToolsModal()">
+        Zamknij
+      </button>
+    </div>
+  </div>
+</div>
+} @if (isWorkStationModalOpen) {
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>Wybór stanowiska</h2>
+
+    <!-- Wyszukiwanie -->
+    <div class="search-container">
+      <input
+        type="text"
+        [formControl]="searchWorkStationsControl"
+        placeholder="Szukaj..."
+      />
+    </div>
+
+    <div class="resource-list">
+      @for(station of getFilteredWorkStations(); track station) {
+      <div class="resource-item" (click)="selectWorkStation(station)">
+        <span>{{ station.symbol }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" (click)="closeWorkStationModal()">
+        Zamknij
+      </button>
+    </div>
+  </div>
+</div>
+}

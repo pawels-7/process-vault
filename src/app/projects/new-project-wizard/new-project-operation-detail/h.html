@@ -1,0 +1,74 @@
+<div class="resources-section">
+  <!-- Przyrządy i uchwyty obróbkowe -->
+  <div class="processing-fixtures-section">
+    <h2>Przyrządy i uchwyty obróbkowe</h2>
+
+    <div formArrayName="processingFixtures">
+      @for(fixture of (operationForm.get('processingFixtures') as
+      FormArray).controls; track fixture; let i = $index) {
+      <div [formGroupName]="i" class="fixture-item">
+        <span>{{ fixture.get('name').value }}</span>
+        <button type="button" (click)="removeProcessingFixture(i)">Usuń</button>
+      </div>
+      }
+    </div>
+
+    <button type="button" (click)="openProcessingFixturesModal()">
+      Dodaj z bazy
+    </button>
+  </div>
+
+  <!-- Narzędzia i uchwyty narzędziowe -->
+  <div class="tool-holders-section">
+    <h2>Narzędzia i uchwyty narzędziowe</h2>
+
+    <div formArrayName="toolHolders">
+      @for(holder of (operationForm.get('toolHolders') as FormArray).controls;
+      track holder; let i = $index) {
+      <div [formGroupName]="i" class="tool-holder-item">
+        <span>{{ holder.get('name').value }}</span>
+        <button type="button" (click)="removeToolHolder(i)">Usuń</button>
+      </div>
+      }
+    </div>
+
+    <button type="button" (click)="openToolHoldersModal()">Dodaj z bazy</button>
+  </div>
+
+  <!-- Narzędzia pomiarowe -->
+  <div class="measuring-tools-section">
+    <h2>Narzędzia pomiarowe</h2>
+
+    <div formArrayName="measuringTools">
+      @for(tool of (operationForm.get('measuringTools') as FormArray).controls;
+      track tool; let i = $index) {
+      <div [formGroupName]="i" class="measuring-tool-item">
+        <span>{{ tool.get('name').value }}</span>
+        <button type="button" (click)="removeMeasuringTool(i)">Usuń</button>
+      </div>
+      }
+    </div>
+
+    <button type="button" (click)="openMeasuringToolsModal()">
+      Dodaj z bazy
+    </button>
+  </div>
+
+  <!-- Stanowisko robocze -->
+  <div class="work-station-section">
+    <h2>Stanowisko robocze</h2>
+
+    @if (operationForm.get('workStation')?.value as workStation) {
+    <div class="work-station-item">
+      <span>{{ workStation.name }}</span>
+      <button type="button" (click)="selectWorkStation(null)">Usuń</button>
+    </div>
+    } @else {
+    <p>Nie wybrano stanowiska</p>
+    }
+
+    <button type="button" (click)="openWorkStationModal()">
+      Wybierz stanowisko
+    </button>
+  </div>
+</div>

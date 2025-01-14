@@ -1,0 +1,134 @@
+<section>
+  <form [formGroup]="projectForm" (change)="saveData()">
+    <div class="controls">
+      <div class="group">
+        <h4 class="group-label">Projekt</h4>
+        <div class="control">
+          <label for="productName">Wyrób</label>
+          <input
+            id="productName"
+            name="productName"
+            type="text"
+            placeholder="Wyrób"
+            formControlName="productName"
+          />
+        </div>
+
+        <div class="control">
+          <label for="partName">Nazwa części</label>
+          <input
+            id="partName"
+            name="partName"
+            type="text"
+            placeholder="Nazwa części"
+            required
+            formControlName="partName"
+          />
+        </div>
+
+        <div class="control">
+          <label for="unitsPerProduct">Sztuk na wyrób</label>
+          <input
+            id="unitsPerProduct"
+            name="unitsPerProduct"
+            type="number"
+            placeholder="Sztuk na wyrób"
+            required
+            formControlName="unitsPerProduct"
+          />
+        </div>
+      </div>
+
+      <div class="group">
+        <h4 class="group-label">Zlecenie</h4>
+
+        <div class="control">
+          <label for="unitsInOrder">Sztuk na zleceniu</label>
+          <input
+            id="unitsInOrder"
+            name="unitsInOrder"
+            type="number"
+            placeholder="Sztuk na zleceniu"
+            required
+            formControlName="unitsInOrder"
+          />
+        </div>
+
+        <div class="control">
+          <label for="unitsPerBatch">Sztuk na partię</label>
+          <input
+            id="unitsPerBatch"
+            name="unitsPerBatch"
+            type="number"
+            placeholder="Sztuk na partię"
+            required
+            formControlName="unitsPerBatch"
+          />
+        </div>
+
+        <div class="control">
+          <label for="completionDate">Data realizacji zlecenia</label>
+          <input
+            id="completionDate"
+            name="completionDate"
+            type="date"
+            placeholder="Data realizacji zlecenia"
+            required
+            formControlName="completionDate"
+          />
+        </div>
+      </div>
+
+      <div class="group">
+        <h4 class="group-label">Materiał</h4>
+        <div class="control">
+          <label for="material">Nazwa materiału</label>
+          <input
+            id="material"
+            name="material"
+            type="text"
+            placeholder="Nazwa materiału"
+            required
+            formControlName="material"
+          />
+        </div>
+
+        <div class="control">
+          <label for="unitMass">Masa 1 sztuki [kg]</label>
+          <input
+            id="unitMass"
+            name="unitMass"
+            type="number"
+            placeholder="Masa 1 sztuki [kg]"
+            required
+            formControlName="unitMass"
+          />
+        </div>
+
+        <div class="control">
+          <label for="materialStandard">Norma materiału</label>
+          <input
+            id="materialStandard"
+            name="materialStandard"
+            type="number"
+            placeholder="Norma materiału"
+            required
+            formControlName="materialStandard"
+          />
+        </div>
+
+        <div class="control">
+          <label for="materialCost">Koszt materiału</label>
+          <input
+            id="materialCost"
+            name="materialCost"
+            type="number"
+            placeholder="Koszt materiału [PLN]"
+            required
+            formControlName="materialCost"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

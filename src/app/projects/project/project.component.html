@@ -1,0 +1,508 @@
+@if(project$ | async; as project) {
+<article>
+  <div class="process">
+    <!-- <div class="process-name">{{ project()?.partName }}</div> -->
+    <div class="process-info">
+      <div class="tree">
+        <ul>
+          <li>
+            <div class="process-title">
+              {{ project.productName }} -
+              <strong>
+                {{ project.partName }}
+              </strong>
+            </div>
+            <ul class="tree-list">
+              @for (process of project.processes; track $index) {
+              <li>
+                <div class="tree-item">
+                  <span
+                    class="toggle-icon"
+                    (click)="toggleProcess(process.processId)"
+                  >
+                    @if(isProcessOpen[process.processId]) {
+                    <i class="fas fa-minus-circle"></i>
+                    } @else {
+                    <i class="fas fa-plus-circle"></i>
+                    }
+                  </span>
+                  <strong class="tree-process"
+                    >Proces: {{ process.blank.name }} ({{
+                      process.operations.length
+                    }})</strong
+                  >
+                  <button (click)="onTechCardClick(process.processId)">
+                    ⇩
+                  </button>
+                </div>
+                @if(isProcessOpen[process.processId]) {
+                <ul class="nested">
+                  @for (operation of process.operations; track $index) {
+                  <li>
+                    <div
+                      (click)="toggleOperation(operation.operationId)"
+                      class="tree-item"
+                    >
+                      <span class="toggle-icon">
+                        @if (isOperationOpen[operation.operationId]) {
+                        <i class="fas fa-minus-circle"></i>
+                        } @else {
+                        <i class="fas fa-plus-circle"></i>
+                        }
+                      </span>
+                      <strong
+                        class="tree-operation"
+                        [routerLink]="[
+                          '/projects',
+                          projectId,
+                          process.processId,
+                          operation.operationId
+                        ]"
+                        >Operacja {{ operation.sequence }}:
+                        {{ operation.operationName }}</strong
+                      >&nbsp; ({{ operation.setups.length }}) &nbsp;
+                      <button
+                        (click)="onInstructionCardClick(operation.operationId)"
+                      >
+                        ⇩
+                      </button>
+                    </div>
+                    @if(isOperationOpen[operation.operationId]) {
+                    <ul class="nested">
+                      @for (setup of operation.setups; track $index) {
+                      <li>
+                        <div
+                          (click)="toggleSetup(setup.setupId)"
+                          class="tree-item"
+                        >
+                          <span class="toggle-icon">
+                            @if(isSetupOpen[setup.setupId]) {
+                            <i class="fas fa-minus-circle"></i>
+                            } @else {
+                            <i class="fas fa-plus-circle"></i>
+                            }
+                          </span>
+                          <strong class="tree-fixture"
+                            >Zamocowanie {{ $index + 1 }}</strong
+                          >
+                          &nbsp; ({{ setup.activities.length }})
+                        </div>
+                        @if(isSetupOpen[setup.setupId]) {
+                        <ul class="nested">
+                          @for (activity of setup.activities; track $index) {
+                          <li class="tree-item">
+                            Zabieg {{ activity.sequence }}:
+                            {{ activity.activityName }}
+                          </li>
+                          }
+                        </ul>
+                        }
+                      </li>
+                      }
+                    </ul>
+                    }
+                  </li>
+                  }
+                </ul>
+                }
+              </li>
+              }
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="column">
+        <div class="drawing-box">
+          <img class="drawing" [src]="project.workpiece.drawing" alt="" />
+        </div>
+        <div class="process-info-box">
+          <div class="info">
+            <span class="info-label"> Sztuk na wyrób:</span>
+            <span class="info-value">
+              {{ project.unitsPerProduct }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Sztuk na zleceniu:</span>
+            <span class="info-value">
+              {{ project.order.unitsInOrder }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Sztuk na partę:</span>
+            <span class="info-value">
+              {{ project.order.unitsPerBatch }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Data realizacji zlecenia: </span>
+            <span class="info-value">
+              {{ project.order.completionDate | date : "dd.MM.yyyy" }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Materiał:</span>
+            <span class="info-value">
+              {{ project.material }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Masa 1 sztuki [kg]:</span>
+            <span class="info-value">
+              {{ project.unitMass }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label"> Norma materiału: </span>
+            <span class="info-value">
+              {{ project.materialStandard }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Materiał na partię:</span>
+            <span class="info-value">
+              {{ project.materialStandard * project.order.unitsPerBatch }}
+            </span>
+          </div>
+          <div class="info">
+            <span class="info-label">Koszt materiału [PLN]:</span>
+            <span class="info-value">
+              {{ project.materialCost }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class="operations">
+      <span class="operations-label">Operacje</span>
+      <div class="operations-list">
+        @for(operation of project()!.processes[0].operations; track operation) {
+          <div
+          class="operation"
+          (click)="showModal.set(true); selectedOperation.set($index)"
+          >
+          Operacja {{ operation.sequence }} - {{ operation.operationName }}
+          <button (click)="onInstCardClick(operation.operationId)">
+            Pobierz
+          </button>
+        </div>
+        
+        Zamocowania @for (fixture of operation.fixtures; track $index) {
+          <div class="fixture">
+            {{ fixture.id }}
+            <img class="fixture-drawing" src="{{ fixture.drawing }}" alt="" />
+          </div>
+          } 
+          }
+        </div>
+    </div>
+
+    <button class="btn-card" (click)="onTechCardClick()">
+      karta technologiczna
+    </button>
+  </div> -->
+</article>
+
+<!-- <div class="card-tech">
+  <table>
+    <tr>
+      <td style="font-weight: bold">
+        Karta technologiczna <br />
+        (plan operacyjny)
+      </td>
+      <td>
+        Wyrób <br />reduktor <br />
+        stożkowy
+      </td>
+      <td>Nazwa części <br />{{ project()?.name }}</td>
+      <td>
+        Nr rys. części <br />
+        01
+      </td>
+      <td>Znak</td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td>
+        Gat. i stan mat. <br />
+        C45
+      </td>
+      <td rowspan="2">
+        Postać i wymiary półfabrykatu [mm] <br />
+        D x L = 95 x 427,5
+      </td>
+      <td>
+        Sztuk /wyrób <br />
+        1
+      </td>
+      <td>
+        kg/1 szt. netto <br />
+        &nbsp;
+      </td>
+      <td>Sztuk na zlecenie, partię</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="2">Norma mat. <br />kg/ 1szt.</td>
+      <td>Materiał kg /zlecenie, partię</td>
+    </tr>
+  </table>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Nr op</th>
+        <th>Wydział</th>
+        <th rowspan="2">Opis operacji</th>
+        <th rowspan="2">Pomoce warsztatowe</th>
+        <th>Kat.r</th>
+        <th>Tpz</th>
+        <th rowspan="2">T</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Stanowisko</th>
+        <th>dod.</th>
+        <th>tj</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(operation of project()?.operations; track $index) {
+      <tr>
+        <td>{{ $index }}</td>
+        <td>Mechaniczny</td>
+        <td rowspan="2">{{ operation.operationName }}</td>
+        <td rowspan="2"></td>
+        <td></td>
+        <td></td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>prostarka</td>
+        <td></td>
+        <td></td>
+      </tr>
+      }
+      
+    </tbody>
+  </table>
+  
+  <table>
+    <tr>
+      <td></td>
+      <td>Opracował</td>
+      <td>Sprawdził</td>
+      <td>Zatwierdził</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card-inst">
+  <table>
+    <tr>
+      <td style="font-weight: bold">Karta instrukcyjna obróbki</td>
+      <td>Symbol, rysunek, części:</td>
+      <td>Znak</td>
+    </tr>
+    <tr>
+      <td>
+        Treść operacji: <br />
+        Toczenie kształtujące
+      </td>
+      <td>
+        Stanowisko robocze:
+        <br />
+        FAMOT 400 CNC
+      </td>
+      <td>
+        Nr operacji: <br />
+        25
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td rowspan="2">Ustawienie</td>
+      <td rowspan="2">Pozycja</td>
+      <td rowspan="2">Zabieg</td>
+      <td rowspan="2">Licz. przej.</td>
+      <td rowspan="2">Opis zabiegu</td>
+      <td rowspan="2">Narzędzie</td>
+      <td colspan="9">Warunki skrawania</td>
+      <td rowspan="2">Czas masz. [min]</td>
+    </tr>
+    <tr>
+      <td>D, d / B</td>
+      <td>L</td>
+      <td>a<sub>p</sub></td>
+      <td>f</td>
+      <td>f<sub>z</sub></td>
+      <td>v<sub>f</sub></td>
+      <td>v<sub>c</sub></td>
+      <td>n</td>
+      <td>i</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Toczyć powierzcnię 78,4 na wymiar 77 na długość 11,5mm</td>
+      <td>DCLNL 2525M15</td>
+      <td>78,4</td>
+      <td>20</td>
+      <td>0,7</td>
+      <td>0,3</td>
+      <td>-</td>
+      <td>-</td>
+      <td>290</td>
+      <td>1177</td>
+      <td>1</td>
+      <td>0,021</td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr>
+      <td rowspan="3">Szkic, uwagi:</td>
+      <td>
+        Przyrządy i uchwyty obróbkowe: <br />
+        - uchwyt tokarski 125/3 DIN 6350 typ 3204
+        <br />- kieł obrotowy PZMb3 <br />
+        - kieł stały DG5
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Przyrządy i uchwyty narzędziowe:
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+        - oprawka DCLNL 2525M12
+        <br />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Narzędzia pomiarowe: <br />
+        Suwmiarka
+      </td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr>
+      <td></td>
+      <td>Opracował</td>
+      <td>Sprawdził</td>
+      <td>Zatwierdził</td>
+    </tr>
+  </table>
+</div> -->
+
+@if(showModal){
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <a class="close" (click)="showModal = false">&times;</a>
+      <h2>
+        {{ project.processes[0].operations[selectedOperation].operationName }}
+      </h2>
+    </div>
+    <div class="modal-body">
+      <div class="fixture-label">Zamocowanie {{ page + 1 }}</div>
+      <img
+        class="fixture-drawing"
+        src="{{
+          project.processes[0].operations[selectedOperation].setups[page]
+            .drawing
+        }}"
+        alt=""
+      />
+      <div class="treatments">
+        <div class="treatments-label">Zabiegi obróbkowe</div>
+        <table>
+          <tr>
+            <th class="head">Opis zabiegu</th>
+            <th class="head">Ap [mm]</th>
+            <th class="head">f [mm/obr]</th>
+            <th class="head">V<sub>c</sub> [m/min]</th>
+            <th class="head">n [obr]</th>
+          </tr>
+          @for (activity of
+          project.processes[0].operations[selectedOperation].setups[page].activities;
+          track $index) {
+          <tr>
+            <td>{{ activity.activityName }}</td>
+            <!-- <td>{{ task.cuttingConditions.depthOfCut }}</td>
+            <td>{{ task.cuttingConditions.cuttingSpeed }}</td>
+            <td>{{ task.cuttingConditions.feedPerRevolution }}</td>
+            <td>{{ task.cuttingConditions.passes }}</td> -->
+          </tr>
+          }
+        </table>
+
+        <!-- @for (task of
+        project()!.operations[selectedOperation()].fixtures[page()].tasks; track
+        $index) {
+          <div class="treatment">
+          <div class="treatment-name">
+            {{ task.taskName }}
+          </div>
+          <div class="conditions">
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.depthOfCut }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.cuttingSpeed }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedPerRevolution }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedPerTooth }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.feedRate }}
+            </div>
+            <div class="treatment-condition">
+              {{ task.cuttingConditions.passes }}
+            </div>
+          </div>
+        </div>
+        } -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button [class.hidden]="page === 0" class="btn-arrow">
+        <span class="btn-content"> &LeftArrow; </span>
+      </button>
+      <button (click)="showModal = false; page = 0">Zamknij</button>
+      <button
+        [class.hidden]="
+          page >=
+          project.processes[0].operations[selectedOperation].setups.length - 2
+        "
+        class="btn-arrow"
+      >
+        <span class="btn-content"> &RightArrow; </span>
+      </button>
+    </div>
+  </div>
+</div>
+} }

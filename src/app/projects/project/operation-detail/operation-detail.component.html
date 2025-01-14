@@ -1,0 +1,242 @@
+<section>
+  <div class="row">
+    <button class="return" (click)="goBack()">←</button>
+    <h3 class="operation-name">
+      Operacja {{ operation?.sequence }}: {{ operation!.operationName }}
+    </h3>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="part setups">
+        <div class="column">
+          <div class="row setup-label">
+            <button
+              class="setups-nav prev"
+              type="button"
+              (click)="previousFixture()"
+              [disabled]="currentFixtureIndex === 0"
+            >
+              ⊲
+            </button>
+            <label class="setup-label" for="setup">
+              Zamocowanie {{ currentFixtureIndex + 1 }}</label
+            >
+            <button
+              class="setups-nav"
+              type="button"
+              (click)="nextFixture()"
+              [disabled]="currentFixtureIndex === operation!.setups.length - 1"
+            >
+              ⊳
+            </button>
+          </div>
+          <div class="photo">
+            @if(operation!.setups[currentFixtureIndex].drawing) {
+            <img
+              [src]="operation!.setups[currentFixtureIndex].drawing"
+              alt="Podgląd rysunku"
+              class="drawing-preview"
+            />
+            } @else {
+            <div>Brak rysunku</div>
+            }
+          </div>
+        </div>
+
+        <div class="part treatments-part">
+          <div class="row">
+            <label class="treatments-label" for="treatment">
+              Zabiegi obróbkowe</label
+            >
+            @if(operation?.timeComponents?.length ) {
+            <button
+              class="switch"
+              type="button"
+              (click)="showConditions = !showConditions"
+            >
+              Pokaż
+              {{ showConditions ? "składniki czasu" : "warunki skrawania" }}
+            </button>
+            }
+          </div>
+          @if(operation){
+          <div class="treatments">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nr</th>
+                  <th>Opis zabiegu</th>
+                  <th>Przejść</th>
+                  @if(showConditions) {
+                  <th>Narzędzie</th>
+                  <th>Dp</th>
+                  <th>Dk</th>
+                  <th>L</th>
+                  <th>Ap</th>
+                  <th>f</th>
+                  <th>Vc</th>
+                  <th>n</th>
+                  <th>tg</th>
+                  } @else { @for(time of operation!.timeComponents; track time)
+                  {
+                  <th>
+                    t<sub>p{{ $index + 1 }}</sub>
+                  </th>
+                  } }
+                </tr>
+              </thead>
+              <tbody>
+                @for(activity of
+                operation!.setups[currentFixtureIndex].activities; track
+                activity) {
+                <tr>
+                  <td>{{ activity.sequence }}</td>
+                  <td class="td-left">{{ activity.activityName }}</td>
+                  <td>{{ activity.passes }}</td>
+                  @if(showConditions) {
+                  <td>{{ activity && getActivitySymbol(activity) }}</td>
+                  <td>
+                    {{ activity.conditions?.Dp || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.Dk || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.L || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.Ap || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.f || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.Vc || "-" }}
+                  </td>
+                  <td>
+                    {{ activity.conditions?.n || "-" }}
+                  </td>
+                  <td>
+                    {{ getActivityMachiningTime(activity) | number : "1.2-3" }}
+                  </td>
+                  } @else { @for(time of activity.activityTimeComponents; track
+                  time) {
+                  <td>
+                    {{ time.timeMinutes ? time.timeMinutes : "-" }}
+                  </td>
+                  }}
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="part">
+      <div class="grid">
+        <div class="column">
+          <button (click)="downloadTechCard()" class="download-button">
+            Pobierz Kartę Technologiczną
+          </button>
+          <div class="column">
+            <label class="treatments-label" for="treatment"
+              >Przyrządy i uchwyty obróbkowe</label
+            >
+            <ul>
+              @for (item of operation?.workHoldingDevices; track item; let i =
+              $index) { @if(item.name) {
+              <li class="cutting">{{ item.name }}</li>
+              } @else { brak przyrządów } }
+            </ul>
+          </div>
+        </div>
+        <div class="column">
+          <button (click)="downloadInstCard()" class="download-button">
+            Pobierz Kartę Instrukcyjną
+          </button>
+          <div class="column">
+            <label class="treatments-label" for="treatment"
+              >Stanowisko robocze</label
+            >
+            {{ operation?.workstation?.symbol || "-" }}
+          </div>
+        </div>
+
+        @if( operation?.timeComponents?.length ) {
+
+        <div class="column" style="grid-row: span 2">
+          <label class="treatments-label" for="treatment"
+            >Składniki czasu t<sub>p</sub> [min]</label
+          >
+          <ul>
+            @for (item of operation?.timeComponents; track item; let i = $index)
+            {
+            <li class="time-component">
+              <span class="time-label">
+                t<sub>p{{ i + 1 }}</sub>
+              </span>
+              <span class="time-value">
+                {{ item.name }}
+              </span>
+            </li>
+            }
+          </ul>
+        </div>
+        }
+        <div class="column">
+          <label class="treatments-label" for="treatment"
+            >Narzędzia i uchwyty narzędziowe</label
+          >
+          <ul>
+            @for (item of getUniqueToolsAndAssemblies(); track item.name; let i
+            = $index) {
+            <li class="time-component">
+              <span class="time-label">
+                {{ item.symbol }}
+              </span>
+              <span class="time-value">
+                {{ item.name }}
+              </span>
+            </li>
+            }
+          </ul>
+        </div>
+        <div class="column">
+          <label class="treatments-label" for="treatment"
+            >Narzędzia pomiarowe</label
+          >
+          <ul>
+            @for (item of operation?.measuringTools; track item; let i = $index)
+            { @if (item.name) {
+            <li class="cutting">{{ item.name }}</li>
+            } @else { brak narzędzi } }
+          </ul>
+        </div>
+
+        @if(operation?.normalizationTasks!.length > 0) {
+
+        <div class="column" style="grid-column: 3">
+          <label class="treatments-label" for="treatment"
+            >Czynności do normowania czasu t<sub>pz [min]</sub>
+          </label>
+          <ul>
+            @for (item of operation?.normalizationTasks; track item; let i =
+            $index) {
+            <li>
+              <span class="norm-time-label">
+                {{ item.name }}
+              </span>
+              <span class="norm-time-value">
+                {{ item.timeMinutes }}
+              </span>
+            </li>
+            }
+          </ul>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

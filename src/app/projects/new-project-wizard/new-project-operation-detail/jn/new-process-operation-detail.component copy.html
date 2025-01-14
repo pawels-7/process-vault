@@ -1,0 +1,230 @@
+<section>
+  <form [formGroup]="currentFixture">
+    <div class="part mountings">
+      <div class="column">
+        <div class="row mounting-label">
+          <button
+            class="mountings-nav"
+            type="button"
+            (click)="previousFixture()"
+            [disabled]="currentFixtureIndex === 0"
+          >
+            &LeftTriangle;
+          </button>
+          <label for="mounting"
+            >Zamocowanie {{ currentFixtureIndex + 1 }}</label
+          >
+          <button class="add-mounting" (click)="addFixture()">&plus;</button>
+          <button class="add-mounting" (click)="deleteFixture()">
+            &minus;
+          </button>
+          <button
+            class="mountings-nav"
+            type="button"
+            (click)="nextFixture()"
+            [disabled]="currentFixtureIndex === fixtures.length - 1"
+          >
+            &RightTriangle;
+          </button>
+        </div>
+        <div class="photo">
+          <div class="column">
+            @if(drawingPreviews[currentFixtureIndex]) {
+            <img
+              [src]="drawingPreviews[currentFixtureIndex]"
+              alt="Podgląd rysunku"
+              class="drawing-preview"
+            />
+            } @else {
+            <label for="drawing" class="drawing-label">Rysunek</label>
+            <input
+              formControlName="drawing"
+              type="file"
+              id="drawing"
+              (change)="onFileChange($event)"
+            />
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="part treatments-part">
+        <div class="row">
+          <label class="treatments-label" for="treatment"
+            >Zabiegi obróbkowe</label
+          >
+        </div>
+
+        <div class="treatments" formArrayName="tasks">
+          @for(task of tasks.controls; track task; let i = $index) {
+          <div [formGroupName]="i" class="treatment">
+            <div class="circle">{{ i + 1 }}</div>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Nazwa"
+              required
+              formControlName="name"
+            />
+            <a class="edit-treatment" title="Edytuj" (click)="editConditions(i)"
+              >&plus;</a
+            >
+            <a class="remove-treatment" title="Usuń" (click)="deleteTask(i)"
+              >&times;</a
+            >
+          </div>
+          }
+          <button class="add-treatment" (click)="addTask()" type="button">
+            &plus;
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+<div class="controls">
+  <button (click)="previous.emit()">Wstecz</button>
+  <button (click)="submit()">Dalej</button>
+</div>
+
+@if(showModal){
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <a class="close" (click)="showModal = false">&times;</a>
+      <h2>
+        Zabieg {{ selectedTaskIndex! + 1 }}:
+        {{ selectedTask!.get("name")!.value }}
+      </h2>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="selectedTask!">
+        <div class="group">
+          <h4 class="group-label">Warunki skrawania</h4>
+          <div class="control">
+            <label for="description">D<sub>p</sub> [mm]</label>
+            <input
+              class="time"
+              id="description"
+              name="description"
+              type="text"
+              placeholder="Dp"
+              formControlName="D_p"
+            />
+          </div>
+
+          <div class="control">
+            <label for="name">D<sub>k</sub> [mm]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Dk"
+              required=""
+              formControlName="D_k"
+            />
+          </div>
+
+          <div class="control">
+            <label for="name">L [mm]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="L"
+              required=""
+              formControlName="L"
+            />
+          </div>
+
+          <div class="control">
+            <label for="name">A<sub>p</sub> [mm]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Ap"
+              required=""
+              formControlName="A_p"
+            />
+          </div>
+          <div class="control">
+            <label for="name">f [mm/obr]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="f"
+              required=""
+              formControlName="f"
+            />
+          </div>
+          <div class="control">
+            <label for="name">V<sub>c</sub> [m/min]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Vc"
+              required=""
+              formControlName="V_c"
+            />
+          </div>
+          <div class="control">
+            <label for="name">n [obr]</label>
+            <input
+              class="time"
+              id="name"
+              name="name"
+              type="text"
+              placeholder="n"
+              required=""
+              formControlName="n"
+            />
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="group">
+            <h4 class="group-label">Narzędzie</h4>
+            <div class="control">
+              <!-- <label for="description">Narzędzie</label> -->
+              <input
+                id="description"
+                name="description"
+                type="text"
+                placeholder="Narzędzie"
+              />
+            </div>
+          </div>
+          <div class="group">
+            <div class="group-label small">Czas główny</div>
+            <div class="control">
+              <label for="name">t<sub>g</sub> [min]</label>
+              <input
+                class="time"
+                id="name"
+                name="name"
+                type="text"
+                placeholder="tg"
+                required=""
+                formControlName="t_g"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="add-treatment" (click)="closeModal()">Zapisz</button>
+    </div>
+  </div>
+</div>
+}

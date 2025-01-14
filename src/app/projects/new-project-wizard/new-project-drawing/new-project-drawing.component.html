@@ -1,0 +1,32 @@
+<form class="drawing-form">
+  <div
+    class="drop-area"
+    [class.dragover]="isDragOver"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    @if (!showDrawing) {
+    <label for="drawing" class="drawing-label">Dodaj Rysunek Wykonawczy</label>
+    <div class="buttons">
+      <input type="file" id="drawing" (change)="onFileChange($event)" />
+      <div class="add">
+        <button class="add-button" (click)="onFileClick($event)">
+          Wybierz plik
+        </button>
+        lub przeciągnij
+      </div>
+    </div>
+    } @else {
+    <img [src]="drawingPreviewUrl" alt="The Drawing" class="drawing-preview" />
+    <button
+      type="button"
+      title="Zmień rysunek"
+      class="change-btn"
+      (click)="onChangeDrawing()"
+    >
+      &times;
+    </button>
+    }
+  </div>
+</form>
