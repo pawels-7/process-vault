@@ -1,6 +1,6 @@
 {
   "/api/**": {
-    "target": "http://localhost:8000",
+    "target": "https://process-vault.onrender.com",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
@@ -9,7 +9,7 @@
     "logLevel": "debug"
   },
   "/uploads/**": {
-    "target": "http://localhost:8000",
+    "target": "https://process-vault.onrender.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
