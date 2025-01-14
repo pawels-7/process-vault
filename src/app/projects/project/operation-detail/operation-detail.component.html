@@ -96,25 +96,25 @@
                   @if(showConditions) {
                   <td>{{ activity && getActivitySymbol(activity) }}</td>
                   <td>
-                    {{ activity.conditions?.Dp || "-" }}
+                    {{ activity.conditions.Dp || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.Dk || "-" }}
+                    {{ activity.conditions.Dk || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.L || "-" }}
+                    {{ activity.conditions.L || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.Ap || "-" }}
+                    {{ activity.conditions.Ap || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.f || "-" }}
+                    {{ activity.conditions.f || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.Vc || "-" }}
+                    {{ activity.conditions.Vc || "-" }}
                   </td>
                   <td>
-                    {{ activity.conditions?.n || "-" }}
+                    {{ activity.conditions.n || "-" }}
                   </td>
                   <td>
                     {{ getActivityMachiningTime(activity) | number : "1.2-3" }}
